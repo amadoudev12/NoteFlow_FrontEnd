@@ -98,7 +98,7 @@ export default function ClasseList() {
     const getClasses = async () => {
       try {
         const res = await enseignantService.getClassesApi()
-        if (res.data) setClasse(res.data.classeEnseigner)
+        if (res.data) setClasse(res.data)
       } catch (err) {
         console.log('erreur serveur')
         navigate('/500')

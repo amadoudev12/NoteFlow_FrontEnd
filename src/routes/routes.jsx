@@ -33,11 +33,11 @@ return (
     <Suspense fallback={<PageLoader message={"chargement"}/>}>
         <Routes>
             <Route path='/login' element={<LoginPage/>} />
-            <Route path='/modification' element={<FirstLoginPage/>} />
             <Route path='/' element={<Home/>}/>
             <Route path='/register' element={<Register/>}/>
             <Route path="/500" element={<Error500 />} />
             <Route element={<PrivateRoute/>}>
+                <Route path='/modification' element={<FirstLoginPage/>} />
                 {/* enseignant route  */}
                     <Route path='/dashboard/enseignant' element={<DashboardEnseignant/>}/>
                     <Route path='/dashboard/classes' element={<Classes/>}/>
@@ -47,9 +47,9 @@ return (
                     <Route path="/dashboard/notes/:id_classe" element={<NotesPage />} />
                 {/* Admin route */}
                 <Route element={<AdminSideBar/>}>
+                    <Route path='/dashboard/admin' element={<AdminDashboard/>}/>
                     <Route path='/dashboard-admin/liste-eleve/:id' element={<ListeEleve/>}/>
                     <Route path='/dashboard/admin/absences' element={<Absence/>}/>
-                    <Route path='/dashboard/admin' element={<AdminDashboard/>}/>
                     <Route path='/dashboard/admin/trimestre' element={<Trimestre/>}/>
                     <Route path='/dashboard/admin/etablissement' element={<Etablissement/>}/>
                     <Route path='/dashboard/bulletins' element={<Bulletins/>}/>

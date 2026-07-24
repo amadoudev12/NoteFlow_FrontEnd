@@ -14,4 +14,14 @@ axiosClient.interceptors.request.use((config)=>{
     return config
 })
 
+axiosClient.interceptors.response.use(
+    (response)=> response, 
+    (error)=>{
+        if(error.response?.status === 401){
+            localStorage.removeItem('token')
+            window.location('/login')
+        }
+    }
+)
+
 export default axiosClient

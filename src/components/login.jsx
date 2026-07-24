@@ -27,22 +27,25 @@ export default function LoginComponent() {
     try {
       const res = await userService.loginUser({ login, mot_passe });
       if (res.data.token) {
-            localStorage.setItem('token', res.data.token);
-            const token = jwtDecode(res.data.token);
-        
+        localStorage.setItem('token', res.data.token);
+        const token = jwtDecode(res.data.token);
+        const role = token.user?.user?.role || token.user?.role || token.role;
+        const firstLogin = token.user?.firstLogin ?? token.firstLogin;
+
         // Vérifier si c'est la première connexion
-        if (token.user.firstLogin && token.user.role != "ADMIN") {
+        if (firstLogin && role !== 'ADMIN') {
           navigate('/modification');
           return;
         }
-        
-        if (token.user.role === 'ENSEIGNANT') {
-          localStorage.setItem('role', token.user.role);
+
+        if (role === 'ENSEIGNANT') {
+          localStorage.setItem('role', role);
           navigate('/dashboard/enseignant');
-        } else if (token.user.role === 'ELEVE') {
+        } else if (role === 'ELEVE') {
+          localStorage.setItem('role', role);
           navigate('/dashboard/eleve');
         } else {
-          localStorage.setItem('role', token.user.role);
+          localStorage.setItem('role', role || 'ADMIN');
           navigate('/dashboard/admin');
         }
       }

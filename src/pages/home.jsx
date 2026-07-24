@@ -17,6 +17,8 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 //Utility: fade-in on scroll
 function useFadeIn() {
@@ -573,6 +575,21 @@ function Footer() {
 
 // App
 export default function App() {
+  const navigate = useNavigate()
+  useEffect(()=>{
+    const token  = localStorage.getItem('token')
+    if(token){
+      const decodedToken = jwtDecode(token).user
+      if(decodedToken.role === "ADMIN") {
+        navigate('/dashboard/admin')
+      }else if (decodedToken.role === "ENSEIGNANT"){
+        navigate('/dashboard/enseignant')
+      }else {
+        navigate('/dashboard/eleve')
+      }
+      console.log(decodedToken)
+    }
+  },[])
   return (
     <div style={{ fontFamily: "Inter, system-ui, sans-serif" }} className="bg-white text-slate-900 antialiased">
       <Navbar />

@@ -263,16 +263,20 @@ export default function AffectationPage() {
           const mapped = affect.data.affectations.map((a) => ({
             id: a.id,
             classeId: a.id_classe,
-            libelleClasse: classes.find((c) => c.id === a.id_classe)?.libelle
-              ?? clas.data.classes.find((c) => c.id === a.id_classe)?.libelle
-              ?? "",
+            libelleClasse: a.classe.libelle,
+            // libelleClasse: classes.find((c) => c.id === a.id_classe)?.libelle
+            //   ?? clas.data.classes.find((c) => c.id === a.id_classe)?.libelle
+            //   ?? "",
             matiereId: a.id_matiere,
             nomMatiere: a.matiere?.nom ?? "",
             matricule: a.id_prof,
-            nomEnseignant: a.enseignant ? `${a.enseignant.prenom} ${a.enseignant.nom}` : "",
+            nomEnseignant: a.compteInstitutionnel?.user?.enseignant
+              ? `${a.compteInstitutionnel.user.enseignant.nom} ${a.compteInstitutionnel.user.enseignant.prenom}`
+              : "",
             enseignant: a.enseignant ?? null,
             coeff: a.coefficient,
           }));
+          console.log(mapped)
           setAffectations(mapped);
       } catch {
         setFetchError("Impossible de charger les données. Veuillez réessayer.");

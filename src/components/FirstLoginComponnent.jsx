@@ -7,6 +7,7 @@
 
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import SignatureCanvas from "react-signature-canvas";
+import { Link } from "react-router-dom";
 
 // ─────────────────────────────────────────────
 // ICÔNES

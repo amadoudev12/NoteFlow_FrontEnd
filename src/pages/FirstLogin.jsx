@@ -21,19 +21,12 @@ export default function FirstLogin() {
     }, [])
 
     const updateUser = async (formData) => {
-
         try {
             const res = await userService.updateUser(formData)
-            localStorage.setItem('token', res.data.token)
-            const token = localStorage.getItem('token')
-            const decodedToken = jwtDecode(token)
-            setUser(decodedToken.user)
-            if (user?.role === "ENSEIGNANT") {
-                navigate('/dashboard/enseignant')
-            } else {
-                navigate('/dashboard/eleve')
+            if(res.status === 200 ){
+                navigate('/login')
+                return
             }
-
         } catch (err) {
             console.log(err)
         }

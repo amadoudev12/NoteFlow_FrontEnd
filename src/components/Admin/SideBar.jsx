@@ -19,6 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import etablissementService from "../../../services/etablissementService";
+import { de } from "zod/v4/locales";
 
 // ─── NAV CONFIG ───────────────────────────────────────────────────────────────
 
@@ -42,6 +43,7 @@ function Sidebar({ open, setOpen }) {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [etablissement, setEtablissement] = useState(null)
+    const [profil, setProfil] = useState(null)
     const logOut = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("role");
@@ -53,6 +55,8 @@ function Sidebar({ open, setOpen }) {
         const token = localStorage.getItem("token");
         if (token) {
             decoded = jwtDecode(token);
+            console.log(decoded)
+            setProfil(decoded?.profil)
             setUser(decoded);
         }
         const getEtablissementInfo = async ()=>{
@@ -89,7 +93,7 @@ function Sidebar({ open, setOpen }) {
                     </div>
                     <div>
                         <p className="text-white font-bold text-base leading-tight">
-                            {etablissement?.nom}
+                            {profil?.etablissement?.nom}
                         </p>
                         <p className="text-blue-300 text-xs">Espace Administrateur</p>
                     </div>

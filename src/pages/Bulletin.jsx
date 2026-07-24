@@ -55,7 +55,7 @@ const downloadBulletin = async (classe) => {
     setDownloading({ id: classe.id, type: "bulletin" })
         try {
             const res = await bulletinService.genererBulletinClasse(classe.id)
-            if(res.data){
+            if(res.status == 200){
                 toast.success('Bulletin generer avec succes')
             }
         } catch (err) {

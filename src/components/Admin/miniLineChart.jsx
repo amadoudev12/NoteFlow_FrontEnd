@@ -1,5 +1,4 @@
 function LineSparkChart({ data }) {
-    console.log(data)
     if (!data?.length) return null;
     const W = 600, H = 200, PAD = 40;
     const values = data.map(d => parseFloat(d.moyenne));

@@ -132,8 +132,8 @@ function DashboardContent({ user }) {
         if (stat.data)     setStatistique(stat.data)
         if (classeE.data)  setClasseEffectif(classeE.data)
         // classeEnseigner = [{ classe: { id, libelle }, matiere }]
-        if (classesApi.data?.classeEnseigner) {
-          setMatieres(classesApi.data.classeEnseigner)
+        if (classesApi.data) {
+          setMatieres(classesApi.data)
         }
       } catch (err) {
         console.log("erreur serveur")
@@ -141,7 +141,6 @@ function DashboardContent({ user }) {
     }
     fetchAll()
   }, [])
-
   const stats = [
     {
       icon: BookOpen, label: "Classes assignées",
@@ -244,29 +243,29 @@ function DashboardContent({ user }) {
             <p className="font-semibold text-slate-800">Mes classes</p>
             <span className="text-xs text-slate-400">
               {classeEffectif
-                ? `${classeEffectif?.resultat.length} classe${classeEffectif.resultat.length > 1 ? "s" : ""}`
+                ? `${classeEffectif?.length} classe${classeEffectif?.length > 1 ? "s" : ""}`
                 : "…"
               }
             </span>
           </div>
           {!classeEffectif
             ? Array.from({ length: 4 }).map((_, i) => <ClassRowSkeleton key={i} />)
-            : classeEffectif.resultat.length === 0
+            : classeEffectif?.length === 0
               ? (
                 <div className="flex flex-col items-center justify-center py-8 text-slate-400">
                   <Users size={28} className="mb-2 opacity-40" />
                   <p className="text-sm">Aucune classe assignée</p>
                 </div>
               )
-              : classeEffectif.resultat.map((c, i) => (
+              : classeEffectif?.map((c, i) => (
                   <ClassRow key={i} index={i} name={c.name} effectif={c.effectif} />
                 ))
           }
-          {classeEffectif?.resultat?.length > 0 && (
+          {classeEffectif?.length > 0 && (
             <div className="mt-4 pt-3 border-t border-slate-50 flex items-center justify-between">
               <span className="text-xs text-slate-400">Total élèves</span>
               <span className="text-xs font-semibold text-slate-700">
-                {classeEffectif.resultat.reduce((sum, c) => sum + c.effectif, 0)} élèves
+                {classeEffectif.reduce((sum, c) => sum + c.effectif, 0)} élèves
               </span>
             </div>
           )}

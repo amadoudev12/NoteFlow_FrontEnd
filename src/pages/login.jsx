@@ -1,38 +1,40 @@
-import React, { useState } from 'react'
+import React from 'react'
 import LoginComponent from '../components/login'
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import FirstLoginPage from '../components/FirstLoginComponnent';
-import userService from '../../services/userService';
+
 export default function login() {
-    const [user, setUser] = useState(null)
-    const [profile, setProfile] = useState(null)
     const navigate = useNavigate();
-    useEffect(()=>{
+
+    useEffect(() => {
         const token = localStorage.getItem('token')
-        if(token){
+        if (!token) return
+
+        try {
             const decodedToken = jwtDecode(token)
-            setUser(decodedToken.user)
-            setProfile(decodedToken.profile)
-            
-            // Vérifier si c'est la première connexion
-            if (decodedToken.firstLogin) {
+            const role = decodedToken?.user?.user?.role || decodedToken?.user?.role || decodedToken?.role
+            const firstLogin = decodedToken?.user?.firstLogin ?? decodedToken?.firstLogin
+
+            if (firstLogin && role !== 'ADMIN') {
                 navigate('/modification')
                 return
             }
-            
-            if(decodedToken.user.role === "ENSEIGNANT"){
+
+            if (role === 'ENSEIGNANT') {
                 navigate('/dashboard/enseignant')
-            }else if (decodedToken.user.role === "ELEVE"){
+                return
+            } else if (role === 'ELEVE') {
                 navigate('/dashboard/eleve')
-            }else{
+                return
+            } else {
                 navigate('/dashboard/admin')
+                return
             }
-        }else{
-            return
+        } catch (error) {
+            console.error('Impossible de décoder le token', error)
         }
-    },[])
+    }, [navigate])
   return (
     <div>
         <LoginComponent/>

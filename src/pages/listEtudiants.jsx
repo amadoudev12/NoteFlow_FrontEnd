@@ -17,7 +17,8 @@ const TYPE_OPTIONS = [
 const getRoleFromStorage = () => {
     const token = localStorage.getItem("token")
     const decodeToken = jwtDecode(token)
-    const role = decodeToken.user.role
+    const role = decodeToken.user.user.role
+    console.log(decodeToken)
     return role
 }// "admin" | "professeur"
 

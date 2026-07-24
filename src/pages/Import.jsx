@@ -146,7 +146,7 @@ export default function ImportPage() {
       setTimeout(() => {
         setImp(false);
         setProgress(0);
-        toast(res.data?.message || "Import réussi ✅", "success");
+        toast(res.data?.message || "Import réussi ", "success");
         setFile(null);
         setPreview(null);
         setSelClass("");

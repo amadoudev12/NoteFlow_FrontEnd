@@ -68,13 +68,16 @@ export function SectionTitle({ icon: Icon, title, subtitle }) {
 }
     // ─── DASHBOARD PAGE ───────────────────────────────────────────────────────────
 import DashboardPage from "../components/Admin/DashboardPage";
+import { jwtDecode } from "jwt-decode";
     // ─── APP
 export default function App() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [stat, setStat]           = useState(null);
     const [chartData, setChartData] = useState({});
     const [loading, setLoading]     = useState(true);
-
+    const token = localStorage.getItem('token')
+    const decodedToken = jwtDecode(token)
+    console.log(decodedToken)
     useEffect(() => {
         const fetchAll = async () => {
         try {
