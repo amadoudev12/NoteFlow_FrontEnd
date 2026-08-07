@@ -13,26 +13,36 @@ export default function login() {
 
         try {
             const decodedToken = jwtDecode(token)
-            const role = decodedToken?.user?.user?.role || decodedToken?.user?.role || decodedToken?.role
-            const firstLogin = decodedToken?.user?.firstLogin ?? decodedToken?.firstLogin
+            const role = decodedToken?.user?.user?.role || decodedToken?.user?.role || decodedToken?.role 
+            const firstLogin = decodedToken?.user?.user?.firstLogin ?? decodedToken?.user?.firstLogin ?? decodedToken?.firstLogin
 
-            if (firstLogin && role !== 'ADMIN') {
+            if (firstLogin && role === "ENSEIGNANT") {
                 navigate('/modification')
                 return
             }
+            switch (role) {
+                case 'ENSEIGNANT':
+                    navigate('/dashboard/enseignant');
+                    break;
 
-            if (role === 'ENSEIGNANT') {
-                navigate('/dashboard/enseignant')
-                return
-            } else if (role === 'ELEVE') {
-                navigate('/dashboard/eleve')
-                return
-            } else {
-                navigate('/dashboard/admin')
-                return
+                case 'ELEVE':
+                    navigate('/dashboard/eleve');
+                    break;
+
+                case 'ADMIN':
+                    navigate('/dashboard/admin');
+                    break;
+
+                case 'SUPERADMIN':
+                    navigate('/dashboard/super-admin');
+                    break;
+
+                default:
+                    navigate('/login');
             }
         } catch (error) {
             console.error('Impossible de décoder le token', error)
+            localStorage.removeItem('token')
         }
     }, [navigate])
   return (

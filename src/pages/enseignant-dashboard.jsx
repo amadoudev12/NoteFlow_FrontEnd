@@ -166,7 +166,7 @@ function DashboardContent({ user }) {
     { icon: ClipboardList, label: "Saisir les notes",         sub: "Évaluations en attente",  iconBg: "bg-blue-600",   iconColor: "text-white", path: "/dashboard/notes" },
     { icon: FileText,      label: "Générer une fiche de notes", sub: "Format PDF disponible",  iconBg: "bg-indigo-600", iconColor: "text-white", onClick: () => setShowFicheModal(true) },
     { icon: Users,         label: "Notes",          sub: "Voir les notes saisies",       iconBg: "bg-teal-700",   iconColor: "text-white", path: "/dashboard/eleves", onClick: () => setShowNotesPanel(true)},
-    // { icon: Calendar,      label: "Mon planning",             sub: "Semaine en cours",         iconBg: "bg-amber-700",  iconColor: "text-white", path: "" },
+    { icon: Calendar,      label: "Faire l'appel",             sub: "Gestion des absences",         iconBg: "bg-amber-700",  iconColor: "text-white", path: "/dashboard/FaireAppel" },
   ]
 
   // const activity = [
@@ -287,7 +287,15 @@ function DashboardContent({ user }) {
 // ─── App ──────────────────────────────────────────────────────────────────────
 export default function TeacherDashboard() {
   const [profil, setProfile] = useState(null)
-
+    const token = localStorage.getItem("token")
+    const decodedToken = jwtDecode(token)
+    const role = decodedToken?.user?.user?.role || decodedToken?.user?.role || decodedToken?.role
+    const firstLogin = decodedToken?.user?.user?.firstLogin ?? decodedToken?.user?.firstLogin ?? decodedToken?.firstLogin
+  
+    if (firstLogin && role === "ENSEIGNANT") {
+        navigate('/modification')
+        return
+    }
   useEffect(() => {
     const token = localStorage.getItem("token")
     if (token) {

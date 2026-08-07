@@ -7,23 +7,35 @@ import userService from '../../services/userService'
 export default function FirstLogin() {
     const [user, setUser] = useState(null)
     const [profile, setProfile] = useState(null)
-    const [isEnseignant, setIsEnseignant] = useState(false)
     const navigate = useNavigate()
-    
+
     useEffect(() => {
         const token = localStorage.getItem('token')
         if (!token) {
             navigate('/login')
+            return
         }
-        const decodedToken = jwtDecode(token)
-        setUser(decodedToken.user)
-        setProfile(decodedToken.profil)
-    }, [])
+
+        try {
+            const decodedToken = jwtDecode(token)
+            // adapte ce chemin à la forme réelle de ton token (voir login.js)
+            const userData = decodedToken?.user?.user || decodedToken?.user
+            setUser(userData)
+            setProfile(decodedToken.profil)
+        } catch (err) {
+            console.error('Impossible de décoder le token', err)
+            localStorage.removeItem('token')
+            navigate('/login')
+        }
+    }, [navigate])
 
     const updateUser = async (formData) => {
         try {
             const res = await userService.updateUser(formData)
-            if(res.status === 200 ){
+            if (res.status === 200 || res.status === 201) {
+                // le token en localStorage contient encore firstLogin: true,
+                // il faut le supprimer sinon /login rebondit direct vers /modification
+                localStorage.removeItem('token')
                 navigate('/login')
                 return
             }

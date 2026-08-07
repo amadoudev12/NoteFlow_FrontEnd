@@ -16,36 +16,8 @@ import {
 import classeService from "../../services/classeService";
 import { set } from "zod";
 import trimestreService from "../../services/trimestreService";
+import absenceService from "../../services/absence.service";
 
-// ─── Mock services (à remplacer par vos vrais appels) ───────────────────────
-// const classeService = {
-//   statClasse: async () => ({
-//     moyenne: 12.4,
-//     meilleurEtMauvais: {
-//       meilleure: { nom: "Camara", prenom: "Fatoumata", moyenne: 17.5 },
-//       mauvaise: { nom: "Bah", prenom: "Mamadou", moyenne: 4.2 },
-//     },
-//   }),
-//   moyenneMaptieres: async () => ({
-//     moyneeMatieresClasse: [
-//       { nom: "Algo", moyenneMat: 14.2 },
-//       { nom: "Maths", moyenneMat: 11.8 },
-//       { nom: "Réseau", moyenneMat: 13.5 },
-//       { nom: "BDD", moyenneMat: 10.1 },
-//       { nom: "Sys. Info", moyenneMat: 15.3 },
-//       { nom: "Anglais", moyenneMat: 9.7 },
-//     ],
-//   }),
-//   repartitionNotes: async () => ({
-//     repartitionNote: [
-//       { range: "0-5", count: 3 },
-//       { range: "5-10", count: 8 },
-//       { range: "10-15", count: 14 },
-//       { range: "15-20", count: 5 },
-//     ],
-//   }),
-// };
-// ────────────────────────────────────────────────────────────────────────────
 
 // Anneau SVG animé pour la moyenne générale
 function MoyenneRing({ value, max = 20 }) {
@@ -138,7 +110,7 @@ function PodiumCard({ title, eleve, accent, icon }) {
       style={{ borderLeft: `4px solid ${accent}` }}
     >
       <div
-        className="w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0"
+        className="w-12 h-12 rounded-full flex items-center justify-center text-xl shrink-0"
         style={{ background: accent + "20", color: accent }}
       >
         {icon}
@@ -181,6 +153,127 @@ function CustomTooltip({ active, payload, label }) {
   );
 }
 
+// Modal listant les absences de la classe
+function AbsencesModal({ open, onClose, loading, absences, nomClasse, trimestreLabel }) {
+  const [filterDate, setFilterDate] = useState("");
+
+  useEffect(() => {
+    if (!open) setFilterDate("");
+  }, [open]);
+
+  if (!open) return null;
+
+  const absencesFiltrees = filterDate
+    ? absences.filter((a) => a.date?.slice(0, 10) === filterDate)
+    : absences;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-xl border border-blue-100 w-full max-w-2xl max-h-[80vh] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* En-tête modal */}
+        <div
+          className="flex items-center justify-between px-6 py-4 rounded-t-2xl"
+          style={{ background: "linear-gradient(135deg, #1E3A5F 0%, #2563EB 100%)" }}
+        >
+          <div>
+            <h3 className="text-lg font-bold text-white">Absences — {nomClasse}</h3>
+            {trimestreLabel && (
+              <p className="text-blue-200 text-xs mt-0.5">{trimestreLabel}</p>
+            )}
+          </div>
+          <button
+            onClick={onClose}
+            className="text-white/80 hover:text-white text-2xl leading-none px-2"
+            aria-label="Fermer"
+          >
+            ×
+          </button>
+        </div>
+
+        {/* Filtre par date */}
+        <div className="flex items-center gap-3 px-6 pt-4">
+          <label className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+            Filtrer par date
+          </label>
+          <input
+            type="date"
+            value={filterDate}
+            onChange={(e) => setFilterDate(e.target.value)}
+            className="border border-blue-200 rounded-lg px-3 py-1.5 text-sm text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {filterDate && (
+            <button
+              onClick={() => setFilterDate("")}
+              className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+            >
+              Réinitialiser
+            </button>
+          )}
+        </div>
+
+        {/* Contenu */}
+        <div className="overflow-y-auto p-6 pt-4">
+          {loading ? (
+            <div className="flex flex-col items-center gap-3 py-10">
+              <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+              <p className="text-slate-400 text-sm">Chargement des absences…</p>
+            </div>
+          ) : absencesFiltrees.length === 0 ? (
+            <p className="text-slate-400 text-sm text-center py-10">
+              {filterDate
+                ? "Aucune absence à cette date."
+                : "Aucune absence enregistrée."}
+            </p>
+          ) : (
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs font-bold uppercase tracking-widest text-slate-400 border-b border-slate-100">
+                  <th className="pb-3 pr-4">Élève</th>
+                  <th className="pb-3 pr-4">Matière</th>
+                  <th className="pb-3 pr-4">Date</th>
+                  <th className="pb-3 text-right">Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                {absencesFiltrees.map((a) => (
+                  <tr
+                    key={a.id}
+                    className="border-b border-slate-50 hover:bg-blue-50/50 transition-colors"
+                  >
+                    <td className="py-3 pr-4">
+                      <p className="font-medium text-slate-800">
+                        {a.eleve?.prenom} {a.eleve?.nom}
+                      </p>
+                      <p className="text-xs text-slate-400">{a.eleve?.matricule}</p>
+                    </td>
+                    <td className="py-3 pr-4 text-slate-600">
+                      {a.affectation?.matiere?.nom ?? "—"}
+                    </td>
+                    <td className="py-3 pr-4 text-slate-600">
+                      {a.date?.slice(0, 10)}
+                    </td>
+                    <td className="py-3 text-right">
+                      <span className="inline-block bg-red-50 text-red-600 text-xs font-semibold px-2.5 py-1 rounded-full">
+                        {a.statut}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const REPARTITION_COLORS = ["#ef4444", "#f59e0b", "#2563EB", "#22c55e"];
 const REPARTITION_LABELS = {
   "0-5": "Insuffisant",
@@ -198,6 +291,9 @@ export default function ClasseStats() {
   const [trimestre, setTrimestre] = useState(null)
   const [trimestreActive, setTrimestreActive] = useState(null)
   const [trimestreSelect, setTrimestreSelect] = useState(null)
+  const [absences, setAbsences] = useState([])
+  const [loadingAbsences, setLoadingAbsences] = useState(false)
+  const [showAbsences, setShowAbsences] = useState(false)
   const {classeId} = useParams()
   useEffect(()=>{
     const chargerTrimestreActive = async () => {
@@ -244,6 +340,20 @@ export default function ClasseStats() {
 
     let nomClasse = classeInfo?.classe?.libelle
     let trimestreLabel = trimestreActive?.libelle
+
+  const consulterAbsences = async () => {
+    setShowAbsences(true);
+    try {
+      setLoadingAbsences(true);
+      const res = await absenceService.getAbsenceByClasse(classeId);
+      setAbsences(res.data?.data ?? []);
+    } catch (err) {
+      console.log("impossible de charger les absences");
+      setAbsences([]);
+    } finally {
+      setLoadingAbsences(false);
+    }
+  };
   // Couleur barre selon moyenne
   const barColor = (val) =>
     val >= 14 ? "#22c55e" : val >= 10 ? "#2563EB" : "#ef4444";
@@ -308,10 +418,16 @@ export default function ClasseStats() {
             <p className="text-blue-200 mt-1 text-sm">
               Statistiques générales · {totalEleves} élèves
             </p>
+            <button
+              onClick={consulterAbsences}
+              className="mt-3 inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white text-sm font-semibold px-4 py-2 rounded-lg transition backdrop-blur"
+            >
+              📋 Consulter les absences
+            </button>
           </div>
 
           {/* Anneau moyenne */}
-          <div className="bg-white/10 backdrop-blur rounded-2xl p-5 flex flex-col items-center gap-1 min-w-[200px]">
+          <div className="bg-white/10 backdrop-blur rounded-2xl p-5 flex flex-col items-center gap-1 min-w-50">
             <p className="text-blue-100 text-xs font-bold uppercase tracking-widest mb-1">
               Moyenne générale
             </p>
@@ -524,6 +640,15 @@ export default function ClasseStats() {
           </div>
         </div>
       </main>
+
+      <AbsencesModal
+        open={showAbsences}
+        onClose={() => setShowAbsences(false)}
+        loading={loadingAbsences}
+        absences={absences}
+        nomClasse={nomClasse}
+        trimestreLabel={trimestreLabel}
+      />
     </div>
   );
 }

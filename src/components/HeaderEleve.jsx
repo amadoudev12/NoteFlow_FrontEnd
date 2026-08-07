@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import eleveService from "../../services/eleveService"
-
+import { Link } from "react-router-dom"
 function HeaderEleve({ eleve, onLogout }) {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
@@ -145,6 +145,26 @@ function HeaderEleve({ eleve, onLogout }) {
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                 </svg>
                                 Bulletin
+                            </>
+                        )}
+                    </button>
+                    <button
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-medium cursor-pointer bg-[#e6f1fb] text-[#185fa5] border border-[#85b7eb] hover:bg-[#cfe3f8] hover:border-[#5a9fd4] active:scale-95 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                        {loading ? (
+                            <>
+                                <svg className="animate-spin" width="15" height="15" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                                </svg>
+                                En cours...
+                            </>
+                        ) : (
+                            <>
+                                <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                <Link to="/dashboard/eleve/mes-absences">Absences</Link>
                             </>
                         )}
                     </button>

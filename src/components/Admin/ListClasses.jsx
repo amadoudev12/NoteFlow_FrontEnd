@@ -19,16 +19,16 @@ function StatCard({ classe, index, visible }) {
 
     return (
         <Link
-        to={`/dashboard/admin/statistique/classe/${classe?.id}`}
-        style={{
-            '--accent': palette.accent,
-            '--card-bg': palette.bg,
-            '--dot': palette.dot,
-            transitionDelay: delay,
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.97)',
-        }}
-        className="stat-card"
+            to={`/dashboard/admin/statistique/classe/${classe?.id}`}
+            style={{
+                '--accent': palette.accent,
+                '--card-bg': palette.bg,
+                '--dot': palette.dot,
+                transitionDelay: delay,
+                opacity: visible ? 1 : 0,
+                transform: visible ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.97)',
+            }}
+            className="stat-card"
         >
         <div className="card-glow" />
         <div className="card-dot" />

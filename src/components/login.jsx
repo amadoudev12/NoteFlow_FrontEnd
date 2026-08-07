@@ -30,10 +30,10 @@ export default function LoginComponent() {
         localStorage.setItem('token', res.data.token);
         const token = jwtDecode(res.data.token);
         const role = token.user?.user?.role || token.user?.role || token.role;
-        const firstLogin = token.user?.firstLogin ?? token.firstLogin;
+        const firstLogin = token.user?.user?.firstLogin ?? token.user?.firstLogin ?? token.firstLogin;
 
-        // Vérifier si c'est la première connexion
-        if (firstLogin && role !== 'ADMIN') {
+        if (firstLogin && role === 'ENSEIGNANT') {
+          localStorage.setItem('role', role);
           navigate('/modification');
           return;
         }
@@ -44,9 +44,14 @@ export default function LoginComponent() {
         } else if (role === 'ELEVE') {
           localStorage.setItem('role', role);
           navigate('/dashboard/eleve');
-        } else {
+        } else if (role === 'SUPERADMIN') {
+          localStorage.setItem('role', role);
+          navigate('/dashboard/super-admin');
+        } else if(role === "ADMIN") {
           localStorage.setItem('role', role || 'ADMIN');
           navigate('/dashboard/admin');
+        }else {
+          navigate('/login')
         }
       }
     } catch (err) {
