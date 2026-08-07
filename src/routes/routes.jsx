@@ -32,13 +32,21 @@ const StatistiquesPages = lazy(()=> import('../pages/ClassesStat.jsx'))
 const StatistiquesClassePages = lazy(()=>import('../pages/StatistiquesClasse.jsx'))
 const MesAbsences = lazy(()=> import('../pages/MesAbsences.jsx'))
 const SUPERADMIN  = lazy(()=> import('../pages/SuperAdmin.jsx'))
+const SuperAdminDashboard = lazy(()=> import('../pages/super-admin/DashboardPage.jsx'))
+const SuperAdminEtablissements = lazy(()=> import('../pages/super-admin/EtablissementsPage.jsx'))
+const SuperAdminDirecteurs = lazy(()=> import('../pages/super-admin/DirecteursPage.jsx'))
+const SuperAdminAnnees = lazy(()=> import('../pages/super-admin/AnneesPage.jsx'))
+const SuperAdminTrimestres = lazy(()=> import('../pages/super-admin/TrimestresPage.jsx'))
+const SuperAdminStatistiques = lazy(()=> import('../pages/super-admin/StatistiquesPage.jsx'))
+const SuperAdminLogs = lazy(()=> import('../pages/super-admin/LogsPage.jsx'))
+const SuperAdminParametres = lazy(()=> import('../pages/super-admin/ParametresPage.jsx'))
 export default function Approutes() {
 return (
     <Suspense fallback={<PageLoader message={"chargement"}/>}>
         <Routes>
             <Route path='/login' element={<LoginPage/>} />
             <Route path='/' element={<Home/>}/>
-            <Route path='/register' element={<Register/>}/>
+            
             <Route path="/500" element={<Error500 />} />
             <Route element={<PrivateRoute/>}>
                 <Route path='/modification' element={<FirstLoginPage/>} />
@@ -68,7 +76,18 @@ return (
                 </Route>
                 <Route path='/dashboard/eleve' element={<EleveDashboard/>}/>
                 <Route path='/dashboard/eleve/mes-absences' element={<MesAbsences/>}/>
-                <Route path='/dashboard/super-admin' element={<SUPERADMIN/>}/>
+                <Route path='/dashboard/super-admin' element={<SUPERADMIN/>}>
+                    <Route index element={<SuperAdminDashboard/>}/>
+                    <Route path='etablissements' element={<SuperAdminEtablissements/>}/>
+                    <Route path='directeurs' element={<SuperAdminDirecteurs/>}/>
+                    <Route path='annees' element={<SuperAdminAnnees/>}/>
+                    <Route path='trimestres' element={<SuperAdminTrimestres/>}/>
+                    <Route path='statistiques' element={<SuperAdminStatistiques/>}/>
+                    <Route path='logs' element={<SuperAdminLogs/>}/>
+                    <Route path='parametres' element={<SuperAdminParametres/>}/>
+                    <Route path='register/etablissement' element={<Register/>}/>
+                </Route>
+
             </Route>
         </Routes>
     </Suspense>

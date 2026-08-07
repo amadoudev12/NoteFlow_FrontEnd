@@ -524,14 +524,14 @@ const handleSubmit = async () => {
       <div className="min-h-screen flex bg-linear-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
 
         {/* Left panel — desktop only */}
-        <div className="hidden lg:flex lg:w-5/12 xl:w-2/5 bg-linear-to-br from-blue-600 to-indigo-700 flex-col justify-between p-12 relative overflow-hidden">
-          {/* Decorative */}
+        {/* <div className="hidden lg:flex lg:w-5/12 xl:w-2/5 bg-linear-to-br from-blue-600 to-indigo-700 flex-col justify-between p-12 relative overflow-hidden">
+          Decorative
           <div className="absolute top-0 right-0 w-72 h-72 bg-white/5 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-72 h-72 bg-indigo-900/30 rounded-full blur-3xl" />
           <div className="absolute inset-0 opacity-[0.07]"
             style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '28px 28px' }} />
 
-          {/* Logo */}
+          Logo
           <div className="relative flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
             <div className="h-10 w-10 bg-white/20 rounded-xl flex items-center justify-center">
               <Icon d={icons.logo} size={20} className="text-white" />
@@ -539,7 +539,7 @@ const handleSubmit = async () => {
             <span className="text-xl font-bold text-white">NoteFlow</span>
           </div>
 
-          {/* Center text */}
+          Center text
           <div className="relative space-y-6">
             <h2 className="text-4xl font-bold text-white leading-tight">
               Rejoignez des centaines d'établissements
@@ -559,7 +559,7 @@ const handleSubmit = async () => {
             </div>
           </div>
 
-          {/* Bottom */}
+          Bottom
           <div className="relative">
             <div className="flex items-center gap-3 bg-white/10 rounded-2xl p-4 border border-white/20">
               <div className="h-10 w-10 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
@@ -571,7 +571,7 @@ const handleSubmit = async () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Right panel — form */}
         <div className="flex-1 flex flex-col justify-center items-center px-6 py-12">
