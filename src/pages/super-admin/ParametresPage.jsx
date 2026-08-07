@@ -1,12 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Sparkles, Image as ImageIcon, Palette, Globe, ChevronsUpDown } from "lucide-react";
 import { Card, SectionTitle, SettingsRow } from "../../components/super-admin/SharedComponents.jsx";
+import parametreService from "../../services/superAdmin/parametreService";
 
 export default function ParametresPage() {
   const [nomPlateforme, setNomPlateforme] = useState("EduSuite Guinée");
   const [fuseau, setFuseau] = useState("GMT (Conakry)");
   const [langue, setLangue] = useState("Français");
   const [couleur, setCouleur] = useState("#2563eb");
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const response = await parametreService.getParametres();
+        setNomPlateforme(response.data?.nomPlateforme || 'EduSuite Guinée');
+        setFuseau(response.data?.fuseau || 'GMT (Conakry)');
+        setLangue(response.data?.langue || 'Français');
+        setCouleur(response.data?.couleur || '#2563eb');
+      } catch (error) {
+        console.error('Erreur chargement paramètres', error);
+      }
+    };
+    load();
+  }, []);
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -54,7 +70,16 @@ export default function ParametresPage() {
           </SettingsRow>
         </Card>
         <div className="flex justify-end">
-          <button className="flex items-center gap-2 bg-gradient-to-br from-blue-600 to-blue-700 text-white text-sm font-bold font-body px-6 py-2.5 rounded-xl shadow-md shadow-blue-600/25 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+          <button
+            onClick={async () => {
+              try {
+                await parametreService.updateParametres({ nomPlateforme, fuseau, langue, couleur });
+              } catch (error) {
+                console.error('Erreur enregistrement paramètres', error);
+              }
+            }}
+            className="flex items-center gap-2 bg-gradient-to-br from-blue-600 to-blue-700 text-white text-sm font-bold font-body px-6 py-2.5 rounded-xl shadow-md shadow-blue-600/25 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+          >
             Enregistrer les modifications
           </button>
         </div>

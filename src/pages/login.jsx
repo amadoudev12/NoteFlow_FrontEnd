@@ -34,6 +34,7 @@ export default function login() {
                     break;
 
                 case 'SUPERADMIN':
+                case 'SUPER_ADMIN':
                     navigate('/dashboard/super-admin');
                     break;
 

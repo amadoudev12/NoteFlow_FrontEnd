@@ -1,32 +1,45 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Search, Filter, Plus, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import {
 	Card,
-	SectionTitle,
 	ActionsMenu,
 	TypeBadge,
 	StatutBadge,
 } from "../../components/super-admin/SharedComponents.jsx";
-import { ETABLISSEMENTS, TYPES_ETAB } from "../../data/superAdminMockData.js";
 import { Link } from "react-router-dom";
+import etablissementService from "../../services/superAdmin/etablissementService";
+
 export default function EtablissementsPage() {
+	const [etablissements, setEtablissements] = useState([]);
 	const [search, setSearch] = useState("");
 	const [typeFilter, setTypeFilter] = useState("Tous");
 	const [page, setPage] = useState(1);
 	const perPage = 6;
 
+	useEffect(() => {
+		const load = async () => {
+			try {
+				const response = await etablissementService.getEtablissements();
+				setEtablissements(response.data || []);
+			} catch (error) {
+				console.error('Erreur chargement établissements', error);
+			}
+		};
+		load();
+	}, []);
+
 	const filtered = useMemo(() => {
-		return ETABLISSEMENTS.filter((e) => {
+		return etablissements.filter((e) => {
 			const q = search.trim().toLowerCase();
 			const matchSearch =
 				q === "" ||
-				e.nom.toLowerCase().includes(q) ||
-				e.ville.toLowerCase().includes(q) ||
-				e.directeur.toLowerCase().includes(q);
+				e.nom?.toLowerCase().includes(q) ||
+				e.ville?.toLowerCase().includes(q) ||
+				e.directeur?.toLowerCase().includes(q);
 			const matchType = typeFilter === "Tous" || e.type === typeFilter;
 			return matchSearch && matchType;
 		});
-	}, [search, typeFilter]);
+	}, [search, typeFilter, etablissements]);
 
 	const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
 	const pageItems = filtered.slice((page - 1) * perPage, page * perPage);
@@ -54,9 +67,10 @@ export default function EtablissementsPage() {
 								className="bg-transparent text-sm outline-none font-body text-slate-700 cursor-pointer"
 							>
 								<option>Tous</option>
-								{TYPES_ETAB.map((t) => (
-									<option key={t}>{t}</option>
-								))}
+								<option>Public</option>
+								<option>Privé</option>
+								<option>Professionnel</option>
+								<option>Université</option>
 							</select>
 						</div>
 					</div>

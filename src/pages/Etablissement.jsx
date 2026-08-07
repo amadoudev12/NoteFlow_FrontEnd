@@ -8,8 +8,12 @@ export default function EtablissementPage() {
     const [id, setId] = useState(null)
     useEffect(()=>{
         const token = localStorage.getItem('token')
+        if (!token) {
+            toast.error("Veuillez vous reconnecter pour continuer")
+            return
+        }
         const decoded = jwtDecode(token)
-        setId(decoded.profil.id)
+        setId(decoded?.profil?.id ?? null)
     },[])
     const [etablissement, setEtablissement] = useState(null)
     useEffect(()=>{
@@ -41,7 +45,7 @@ export default function EtablissementPage() {
             setForm({
                 nom: etablissement.nom || "",
                 adresse: etablissement.adresse || "",
-                telephone: etablissement.phone || "",
+                phone: etablissement.phone || "",
                 email: etablissement.email || "",
                 code: etablissement.code || "",
                 statut: etablissement.statut || "",
@@ -52,24 +56,30 @@ export default function EtablissementPage() {
     }, [etablissement])
     const [saved, setSaved] = useState(false)
     const handleSave = async () => {
-        if(!form){
+        if (!form || !id) {
+            toast.error("Veuillez vous reconnecter avant de sauvegarder")
             return
         }
         try {
-            form.admin_id = id
-            const res = await etablissementService.postEtablissement(form)
-            if(res.status == 201) {
-                toast.success("Informations sauvegardées avec succès ")
+            const payload = {
+                ...form,
+                admin_id: id,
+                phone: form.phone || ""
+            }
+            const res = await etablissementService.postEtablissement(payload)
+            if (res?.status === 201) {
+                toast.success("Informations sauvegardées avec succès")
             }
         }catch(err){
-            console.log('erreur serveur')
+            console.error(err)
+            toast.error("Échec de l'enregistrement. Vérifiez les informations saisies.")
         }
     };
 
     const fields = [
         { key: "nom", label: "Nom de l'établissement", icon: Building2, placeholder: "Nom officiel" },
         { key: "adresse", label: "Adresse", icon: MapPin, placeholder: "Adresse complète" },
-        { key: "telephone", label: "Téléphone", icon: Phone, placeholder: "+225 XX XX XX XX" },
+        { key: "phone", label: "Téléphone", icon: Phone, placeholder: "+225 XX XX XX XX" },
         { key: "email", label: "Email", icon: Mail, placeholder: "email@etablissement.ci" },
         { key: "code", label: "Code établissement", icon: Hash, placeholder: "00025" },
         { key: "statut", label: "Statut", icon: BadgeCheck, placeholder: "Privé / Public" },

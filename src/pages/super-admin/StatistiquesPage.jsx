@@ -1,16 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, AreaChart, Area } from "recharts";
 import { Building2, GraduationCap, ShieldCheck, TrendingUp } from "lucide-react";
 import { StatCard, Card, SectionTitle } from "../../components/super-admin/SharedComponents.jsx";
-import { CROISSANCE_DATA, REPARTITION_DATA, ACTIVITE_HEBDO } from "../../data/superAdminMockData.js";
+import statistiqueService from "../../services/superAdmin/statistiqueService";
 
 export default function StatistiquesPage() {
+  const [stats, setStats] = useState({
+    totalEtablissements: 0,
+    eleves: 0,
+    directeurs: 0,
+    croissanceEtablissements: [],
+    repartitionEtablissements: [],
+    activiteHebdo: []
+  });
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const response = await statistiqueService.getStatistiques();
+        setStats(response.data || {});
+      } catch (error) {
+        console.error('Erreur chargement statistiques', error);
+      }
+    };
+    load();
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-        <StatCard label="Établissements" value="128" icon={Building2} color="blue" />
-        <StatCard label="Élèves inscrits" value="24 680" icon={GraduationCap} color="green" />
-        <StatCard label="Directeurs actifs" value="118" icon={ShieldCheck} color="orange" />
+        <StatCard label="Établissements" value={String(stats.totalEtablissements || 0)} icon={Building2} color="blue" />
+        <StatCard label="Élèves inscrits" value={String(stats.eleves || 0)} icon={GraduationCap} color="green" />
+        <StatCard label="Directeurs actifs" value={String(stats.directeurs || 0)} icon={ShieldCheck} color="orange" />
         <StatCard label="Taux de croissance annuel" value="+18%" icon={TrendingUp} color="slate" />
       </div>
 
@@ -18,7 +39,7 @@ export default function StatistiquesPage() {
         <Card className="p-6">
           <SectionTitle eyebrow="Tendance" title="Croissance des établissements" />
           <ResponsiveContainer width="100%" height={260}>
-            <LineChart data={CROISSANCE_DATA} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+            <LineChart data={(stats.croissanceEtablissements || stats.croissance || [])} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#eef2f7" vertical={false} />
               <XAxis dataKey="mois" tick={{ fontSize: 12, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 12, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
@@ -31,13 +52,13 @@ export default function StatistiquesPage() {
         <Card className="p-6">
           <SectionTitle eyebrow="Répartition" title="Établissements par type" />
           <ResponsiveContainer width="100%" height={260}>
-            <BarChart data={REPARTITION_DATA} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+            <BarChart data={(stats.repartitionEtablissements || stats.repartition || [])} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#eef2f7" vertical={false} />
               <XAxis dataKey="name" tick={{ fontSize: 12, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 12, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
               <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #e2e8f0", fontSize: 13, fontFamily: "Inter" }} />
               <Bar dataKey="value" radius={[8, 8, 0, 0]}>
-                {REPARTITION_DATA.map((entry, index) => (
+                {(stats.repartitionEtablissements || stats.repartition || []).map((entry, index) => (
                   <Cell key={index} fill={entry.color} />
                 ))}
               </Bar>
@@ -48,7 +69,7 @@ export default function StatistiquesPage() {
         <Card className="p-6 xl:col-span-2">
           <SectionTitle eyebrow="Engagement" title="Activité hebdomadaire (connexions plateforme)" />
           <ResponsiveContainer width="100%" height={240}>
-            <AreaChart data={ACTIVITE_HEBDO} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+            <AreaChart data={stats.activiteHebdo || []} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorActivite" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#16a34a" stopOpacity={0.3} />

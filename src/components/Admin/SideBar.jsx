@@ -25,7 +25,7 @@ import { de } from "zod/v4/locales";
 
 const NAV = [
     { icon: LayoutDashboard, label: "Vue d'ensemble",            path: "/dashboard/admin",                   end: true },
-    { icon: CalendarRange,   label: "Périodes & trimestres",     path: "/dashboard/admin/trimestre" },
+    // { icon: CalendarRange,   label: "Périodes & trimestres",     path: "/dashboard/admin/trimestre" },
     { icon: BarChart3,       label: "Statistiques des classes",  path: "/dashboard/admin/statistique" },
     { icon: FileText,        label: "Bulletins scolaires",       path: "/dashboard/bulletins" },
     { icon: School,          label: "Établissement",             path: "/dashboard/admin/etablissement" },

@@ -16,7 +16,7 @@ const Home = lazy(()=> import('../pages/home.jsx'))
 const EleveDashboard = lazy(()=>import('../pages/eleve-dashboard.jsx'))
 const AdminDashboard = lazy(()=> import('../pages/Admin.jsx'))
 const AdminSideBar = lazy(()=> import('../layouts/AdminLayout.jsx'))
-const Trimestre = lazy(()=> import('../pages/Trimestre.jsx'))
+// const Trimestre = lazy(()=> import('../pages/Trimestre.jsx'))
 const FaireAppel = lazy(()=> import('../pages/FaireAppel.jsx'))
 const Etablissement = lazy(()=> import('../pages/Etablissement.jsx'))
 const Bulletins = lazy(()=> import('../pages/Bulletin.jsx'))
@@ -62,7 +62,7 @@ return (
                 <Route element={<AdminSideBar/>}>
                     <Route path='/dashboard/admin' element={<AdminDashboard/>}/>
                     <Route path='/dashboard-admin/liste-eleve/:id' element={<ListeEleve/>}/>
-                    <Route path='/dashboard/admin/trimestre' element={<Trimestre/>}/>
+                    {/* <Route path='/dashboard/admin/trimestre' element={<Trimestre/>}/> */}
                     <Route path='/dashboard/admin/etablissement' element={<Etablissement/>}/>
                     <Route path='/dashboard/bulletins' element={<Bulletins/>}/>
                     <Route path='/dashboard/admin/meilleur-eleves' element={<TopClasse/>}/>

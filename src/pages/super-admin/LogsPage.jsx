@@ -1,8 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, SectionTitle, StatutBadge } from "../../components/super-admin/SharedComponents.jsx";
-import { LOGS } from "../../data/superAdminMockData.js";
+import logService from "../../services/superAdmin/logService";
 
 export default function LogsPage() {
+  const [logs, setLogs] = useState([]);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const response = await logService.getLogs();
+        setLogs(response.data || []);
+      } catch (error) {
+        console.error('Erreur chargement logs', error);
+      }
+    };
+    load();
+  }, []);
+
   return (
     <Card className="overflow-hidden">
       <div className="p-6 border-b border-slate-100">
@@ -19,7 +33,7 @@ export default function LogsPage() {
             </tr>
           </thead>
           <tbody>
-            {LOGS.map((log) => (
+            {logs.map((log) => (
               <tr key={log.id} className="border-b border-slate-50 last:border-0 hover:bg-slate-50/60 transition-colors">
                 <td className="px-6 py-4 font-semibold text-slate-800">{log.action}</td>
                 <td className="px-6 py-4 text-slate-500">{log.utilisateur}</td>

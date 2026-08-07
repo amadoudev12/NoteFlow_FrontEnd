@@ -44,7 +44,7 @@ export default function LoginComponent() {
         } else if (role === 'ELEVE') {
           localStorage.setItem('role', role);
           navigate('/dashboard/eleve');
-        } else if (role === 'SUPERADMIN') {
+        } else if (role === 'SUPERADMIN' || role === 'SUPER_ADMIN') {
           localStorage.setItem('role', role);
           navigate('/dashboard/super-admin');
         } else if(role === "ADMIN") {

@@ -21,7 +21,7 @@ export default function SidebarSuperAdmin() {
           <GraduationCap size={22} className="text-white" strokeWidth={2.2} />
         </div>
         <div>
-          <p className="font-display font-extrabold text-slate-900 text-[15px] leading-tight">EduSuite</p>
+          <p className="font-display font-extrabold text-slate-900 text-[15px] leading-tight">NoteFlow</p>
           <p className="text-[11px] text-slate-400 font-body font-medium tracking-wide">SUPER ADMIN</p>
         </div>
       </div>

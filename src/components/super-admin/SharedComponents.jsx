@@ -35,12 +35,14 @@ export function Badge({ tone = "slate", children }) {
 }
 
 export function StatutBadge({ statut }) {
+  const normalized = String(statut || '').trim().toLowerCase();
   const map = {
     actif: { tone: "green", label: "Actif" },
     active: { tone: "green", label: "Active" },
     suspendu: { tone: "red", label: "Suspendu" },
     inactif: { tone: "slate", label: "Inactif" },
     archivee: { tone: "slate", label: "Archivée" },
+    archive: { tone: "slate", label: "Archivé" },
     "en cours": { tone: "blue", label: "En cours" },
     "a venir": { tone: "orange", label: "À venir" },
     termine: { tone: "slate", label: "Terminé" },
@@ -48,7 +50,7 @@ export function StatutBadge({ statut }) {
     alerte: { tone: "orange", label: "Alerte" },
     echec: { tone: "red", label: "Échec" },
   };
-  const cfg = map[statut] || { tone: "slate", label: statut };
+  const cfg = map[normalized] || { tone: "slate", label: statut || 'Actif' };
   return (
     <Badge tone={cfg.tone}>
       <CircleDot size={11} strokeWidth={3} />
@@ -58,13 +60,19 @@ export function StatutBadge({ statut }) {
 }
 
 export function TypeBadge({ type }) {
+  const normalized = String(type || '').trim().toLowerCase();
   const map = {
-    Public: "blue",
-    Privé: "green",
-    Professionnel: "orange",
-    Université: "slate",
+    public: "blue",
+    publique: "blue",
+    privé: "green",
+    prive: "green",
+    professionnel: "orange",
+    professionel: "orange",
+    université: "slate",
+    universite: "slate",
   };
-  return <Badge tone={map[type] || "slate"}>{type}</Badge>;
+  const label = String(type || 'Public').trim();
+  return <Badge tone={map[normalized] || "slate"}>{label}</Badge>;
 }
 
 export function Card({ children, className = "" }) {
@@ -219,18 +227,18 @@ export function Navbar({ pageTitle }) {
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="hidden md:flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 w-72 focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:border-blue-400 transition-all">
+        {/* <div className="hidden md:flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 w-72 focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:border-blue-400 transition-all">
           <SearchIcon size={16} className="text-slate-400" />
           <input
             placeholder="Rechercher un établissement, un directeur..."
             className="bg-transparent text-sm text-slate-700 placeholder:text-slate-400 outline-none w-full font-body"
           />
-        </div>
+        </div> */}
 
-        <button className="relative w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center hover:bg-slate-100 transition-colors">
+        {/* <button className="relative w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center hover:bg-slate-100 transition-colors">
           <BellIcon size={18} className="text-slate-500" />
           <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-orange-500 rounded-full ring-2 ring-white" />
-        </button>
+        </button> */}
 
         <div className="flex items-center gap-3 pl-3 border-l border-slate-200 cursor-pointer group">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white font-display font-bold text-sm shadow-md shadow-blue-600/20">
@@ -240,7 +248,7 @@ export function Navbar({ pageTitle }) {
             <p className="text-sm font-semibold text-slate-800 font-body leading-tight">Diallo El Hadj Amadou</p>
             <p className="text-[11px] text-blue-600 font-bold font-body tracking-wide">SUPER ADMIN</p>
           </div>
-          <ChevronDown size={16} className="text-slate-400 group-hover:text-slate-600 transition-colors" />
+          {/* <ChevronDown size={16} className="text-slate-400 group-hover:text-slate-600 transition-colors" /> */}
         </div>
       </div>
     </header>

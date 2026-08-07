@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import SignatureCanvas from "react-signature-canvas";
+// import SignatureCanvas from "react-signature-canvas";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import adminService from '../../services/adminService';
@@ -81,7 +81,7 @@ function StepIndicator({ current }) {
     { n: 1, label: 'Compte admin' },
     { n: 2, label: 'Établissement' },
     { n: 3, label: 'Confirmation' },
-    { n: 4, label: 'Signature' }
+    // { n: 4, label: 'Signature' }
   ];
   return (
     <div className="flex items-center justify-center gap-0 mb-10">
@@ -114,8 +114,8 @@ function StepIndicator({ current }) {
 
 // ── Step 1 : Admin account ───────────────────────────────────────
 function Step1({ data, onChange, errors }) {
-  const [showPwd, setShowPwd]     = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+  // const [showPwd, setShowPwd]     = useState(false);
+  // const [showConfirm, setShowConfirm] = useState(false);
 
   return (
     <div className="space-y-5">
@@ -151,7 +151,7 @@ function Step1({ data, onChange, errors }) {
         error={errors.email}
       />
 
-      <Field label="Mot de passe" icon={icons.lock} error={errors.mot_passe}>
+      {/* <Field label="Mot de passe" icon={icons.lock} error={errors.mot_passe}>
         <input
           name="mot_passe"
           type={showPwd ? 'text' : 'password'}
@@ -166,9 +166,9 @@ function Step1({ data, onChange, errors }) {
           className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-600">
           <Icon d={showPwd ? icons.eyeOff : icons.eye} size={16} />
         </button>
-      </Field>
+      </Field> */}
 
-      <Field label="Confirmer le mot de passe" icon={icons.lock} error={errors.confirm}>
+      {/* <Field label="Confirmer le mot de passe" icon={icons.lock} error={errors.confirm}>
         <input
           name="confirm"
           type={showConfirm ? 'text' : 'password'}
@@ -183,10 +183,10 @@ function Step1({ data, onChange, errors }) {
           className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-600">
           <Icon d={showConfirm ? icons.eyeOff : icons.eye} size={16} />
         </button>
-      </Field>
+      </Field> */}
 
       {/* Password strength */}
-      {data.mot_passe && (
+      {/* {data.mot_passe && (
         <div>
           <div className="flex gap-1 mb-1">
             {[1,2,3,4].map(i => {
@@ -203,7 +203,7 @@ function Step1({ data, onChange, errors }) {
             {data.mot_passe.length < 6 ? 'Trop court' : data.mot_passe.length < 8 ? 'Faible — ajoutez des chiffres' : /[A-Z]/.test(data.mot_passe) && /[0-9]/.test(data.mot_passe) && /[^a-zA-Z0-9]/.test(data.mot_passe) ? '✓ Mot de passe fort' : 'Moyen — ajoutez majuscules et symboles'}
           </p>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
@@ -318,7 +318,7 @@ function Step3({ admin, etab }) {
         <Row label="Prénom" value={admin.prenom} />
         <Row label="Nom" value={admin.nom} />
         <Row label="Email" value={admin.email} />
-        <Row label="Mot de passe" value="••••••••" />
+        {/* <Row label="Mot de passe" value="••••••••" /> */}
       </div>
 
       {/* Etablissement */}
@@ -346,54 +346,54 @@ function Step3({ admin, etab }) {
 }
 
 
-// signature step 
-function Step4({ sigRef, onSignatureEnd, onClear, signatureError }) {
-  return (
-    <div className="space-y-5">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1.5">
-          Signature du directeur *
-        </label>
+// signature step
+// function Step4({ sigRef, onSignatureEnd, onClear, signatureError }) {
+//   return (
+//     <div className="space-y-5">
+//       <div>
+//         <label className="block text-sm font-medium text-gray-700 mb-1.5">
+//           Signature du directeur *
+//         </label>
 
-        <div className={`relative border-2 rounded-xl bg-white overflow-hidden cursor-crosshair transition-colors
-          ${signatureError ? 'border-red-300' : 'border-gray-200 hover:border-gray-300'}`}>
-          <div className="absolute bottom-8 left-4 right-4 border-b border-dashed border-gray-200 pointer-events-none" />
-          <SignatureCanvas
-            ref={sigRef}
-            onEnd={onSignatureEnd}
-            penColor="#1e3a5f"
-            backgroundColor="transparent"
-            canvasProps={{
-              className: "w-full block touch-none",
-              style: { height: 180 },
-            }}
-          />
-          <span className="absolute bottom-2 right-3 text-[10px] text-gray-300 font-bold tracking-widest pointer-events-none select-none uppercase">
-            Signature
-          </span>
-        </div>
+//         <div className={`relative border-2 rounded-xl bg-white overflow-hidden cursor-crosshair transition-colors
+//           ${signatureError ? 'border-red-300' : 'border-gray-200 hover:border-gray-300'}`}>
+//           <div className="absolute bottom-8 left-4 right-4 border-b border-dashed border-gray-200 pointer-events-none" />
+//           <SignatureCanvas
+//             ref={sigRef}
+//             onEnd={onSignatureEnd}
+//             penColor="#1e3a5f"
+//             backgroundColor="transparent"
+//             canvasProps={{
+//               className: "w-full block touch-none",
+//               style: { height: 180 },
+//             }}
+//           />
+//           <span className="absolute bottom-2 right-3 text-[10px] text-gray-300 font-bold tracking-widest pointer-events-none select-none uppercase">
+//             Signature
+//           </span>
+//         </div>
 
-        {signatureError && (
-          <p className="mt-1.5 text-xs text-red-600">{signatureError}</p>
-        )}
+//         {signatureError && (
+//           <p className="mt-1.5 text-xs text-red-600">{signatureError}</p>
+//         )}
 
-        <div className="flex justify-end mt-1.5">
-          <button
-            type="button"
-            onClick={onClear}
-            className="text-xs text-gray-400 hover:text-gray-600 hover:bg-gray-50 px-2 py-1 rounded transition-all flex items-center gap-1"
-          >
-            ✕ Effacer et recommencer
-          </button>
-        </div>
-      </div>
+//         <div className="flex justify-end mt-1.5">
+//           <button
+//             type="button"
+//             onClick={onClear}
+//             className="text-xs text-gray-400 hover:text-gray-600 hover:bg-gray-50 px-2 py-1 rounded transition-all flex items-center gap-1"
+//           >
+//             ✕ Effacer et recommencer
+//           </button>
+//         </div>
+//       </div>
 
-      <p className="text-xs text-gray-400 text-center">
-        En créant votre compte, vous acceptez les conditions d'utilisation de NoteFlow.
-      </p>
-    </div>
-  );
-}
+//       <p className="text-xs text-gray-400 text-center">
+//         En créant votre compte, vous acceptez les conditions d'utilisation de NoteFlow.
+//       </p>
+//     </div>
+//   );
+// }
 // ── Main Register Page ───────────────────────────────────────────
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -401,7 +401,8 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
   const [adminData, setAdminData] = useState({
-    prenom: '', nom: '', email: '', mot_passe: '', confirm: '',
+    prenom: '', nom: '', email: '',
+    // mot_passe: '', confirm: '',
   });
   const [etabData, setEtabData] = useState({
     nom: '', directeur: '', adresse: '', phone: '', email: '', code: '', statut: '',
@@ -410,9 +411,9 @@ export default function RegisterPage() {
   const [errorsAdmin, setErrorsAdmin] = useState({});
   const [errorsEtab, setErrorsEtab]   = useState({});
 
-  const sigRef = useRef(null);
-  const [hasSig, setHasSig]             = useState(false);
-  const [signatureError, setSignatureError] = useState('');
+  // const sigRef = useRef(null);
+  // const [hasSig, setHasSig]             = useState(false);
+  // const [signatureError, setSignatureError] = useState('');
 
   const onChangeAdmin = (e) => {
     setAdminData(p => ({ ...p, [e.target.name]: e.target.value }));
@@ -430,10 +431,10 @@ export default function RegisterPage() {
     if (!adminData.nom.trim())     errs.nom      = 'Le nom est requis.';
     if (!adminData.email.trim())   errs.email    = 'L\'email est requis.';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(adminData.email)) errs.email = 'Email invalide.';
-    if (!adminData.mot_passe)      errs.mot_passe = 'Le mot de passe est requis.';
-    else if (adminData.mot_passe.length < 6) errs.mot_passe = 'Minimum 6 caractères.';
-    if (!adminData.confirm)        errs.confirm  = 'Veuillez confirmer le mot de passe.';
-    else if (adminData.confirm !== adminData.mot_passe) errs.confirm = 'Les mots de passe ne correspondent pas.';
+    // if (!adminData.mot_passe)      errs.mot_passe = 'Le mot de passe est requis.';
+    // else if (adminData.mot_passe.length < 6) errs.mot_passe = 'Minimum 6 caractères.';
+    // if (!adminData.confirm)        errs.confirm  = 'Veuillez confirmer le mot de passe.';
+    // else if (adminData.confirm !== adminData.mot_passe) errs.confirm = 'Les mots de passe ne correspondent pas.';
     setErrorsAdmin(errs);
     return Object.keys(errs).length === 0;
   };
@@ -450,71 +451,70 @@ export default function RegisterPage() {
     return Object.keys(errs).length === 0;
   };
 
-  const onSignatureEnd = () => {
-  if (sigRef.current && !sigRef.current.isEmpty()) {
-    setHasSig(true);
-    setSignatureError('');
-  }
-};
+  // const onSignatureEnd = () => {
+  //   if (sigRef.current && !sigRef.current.isEmpty()) {
+  //     setHasSig(true);
+  //     setSignatureError('');
+  //   }
+  // };
 
-const clearSignature = () => {
-  sigRef.current?.clear();
-  setHasSig(false);
-  setSignatureError('');
-};
+  // const clearSignature = () => {
+  //   sigRef.current?.clear();
+  //   setHasSig(false);
+  //   setSignatureError('');
+  // };
 
-// handleNext — remplacez uniquement la condition step === 3
-const handleNext = () => {
-  if (step === 1 && !validateStep1()) return;
-  if (step === 2 && !validateStep2()) return;
-  // step 3 = confirmation, pas de validation, on passe à 4
-  setStep(s => s + 1);
-};
+  // handleNext — dernière étape = confirmation (step 3)
+  const handleNext = () => {
+    if (step === 1 && !validateStep1()) return;
+    if (step === 2 && !validateStep2()) return;
+    setStep(s => s + 1);
+  };
 
-// handleSubmit — remplacez par cette version FormData
-const handleSubmit = async () => {
-  if (!sigRef.current || sigRef.current.isEmpty()) {
-    setSignatureError('Veuillez apposer la signature avant de continuer.');
-    return;
-  }
-  setLoading(true);
-  setApiError(null);
-  try {
-    const signatureBlob = await new Promise((resolve, reject) => {
-      sigRef.current.getCanvas().toBlob(
-        (blob) => (blob ? resolve(blob) : reject(new Error('Conversion échouée'))),
-        'image/png'
-      );
-    });
+  // handleSubmit — version FormData, sans mot de passe ni signature
+  const handleSubmit = async () => {
+    // if (!sigRef.current || sigRef.current.isEmpty()) {
+    //   setSignatureError('Veuillez apposer la signature avant de continuer.');
+    //   return;
+    // }
+    setLoading(true);
+    setApiError(null);
+    try {
+      // const signatureBlob = await new Promise((resolve, reject) => {
+      //   sigRef.current.getCanvas().toBlob(
+      //     (blob) => (blob ? resolve(blob) : reject(new Error('Conversion échouée'))),
+      //     'image/png'
+      //   );
+      // });
 
-    const formData = new FormData();
-    formData.append('prenom',     adminData.prenom);
-    formData.append('nom',        adminData.nom);
-    formData.append('email',      adminData.email);
-    formData.append('mot_passe',  adminData.mot_passe);
-    formData.append('etab_nom',       etabData.nom);
-    formData.append('etab_directeur', etabData.directeur);
-    formData.append('etab_adresse',   etabData.adresse);
-    formData.append('etab_phone',     etabData.phone  || '');
-    formData.append('etab_email',     etabData.email  || '');
-    formData.append('etab_code',      etabData.code);
-    formData.append('etab_statut',    etabData.statut);
-    formData.append('signature',      signatureBlob, 'signature.png');
+      const formData = new FormData();
+      formData.append('prenom',     adminData.prenom);
+      formData.append('nom',        adminData.nom);
+      formData.append('email',      adminData.email);
+      // formData.append('mot_passe',  adminData.mot_passe);
+      formData.append('etab_nom',       etabData.nom);
+      formData.append('etab_directeur', etabData.directeur);
+      formData.append('etab_adresse',   etabData.adresse);
+      formData.append('etab_phone',     etabData.phone  || '');
+      formData.append('etab_email',     etabData.email  || '');
+      formData.append('etab_code',      etabData.code);
+      formData.append('etab_statut',    etabData.statut);
+      // formData.append('signature',      signatureBlob, 'signature.png');
 
-    await adminService.postAdmin(formData);
-    navigate('/login', { state: { registered: true } });
-  } catch (err) {
-    setApiError(err.response?.data?.message ?? 'Une erreur est survenue. Veuillez réessayer.');
-  } finally {
-    setLoading(false);
-  }
-};
+      await adminService.postAdmin(formData);
+      navigate('/login', { state: { registered: true } });
+    } catch (err) {
+      setApiError(err.response?.data?.message ?? 'Une erreur est survenue. Veuillez réessayer.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const stepTitle = {
     1: { title: 'Créer votre compte', sub: 'Renseignez les informations de l\'administrateur' },
     2: { title: 'Votre établissement', sub: 'Informations sur votre établissement scolaire' },
     3: { title: 'Récapitulatif', sub: 'Vérifiez vos informations avant de valider' },
-    4: { title: 'Signature',             sub: 'Apposez la signature officielle du directeur' }
+    // 4: { title: 'Signature',             sub: 'Apposez la signature officielle du directeur' }
   }[step];
 
   return (
@@ -605,14 +605,14 @@ const handleSubmit = async () => {
               {step === 1 && <Step1 data={adminData} onChange={onChangeAdmin} errors={errorsAdmin} />}
               {step === 2 && <Step2 data={etabData}  onChange={onChangeEtab}  errors={errorsEtab} />}
               {step === 3 && <Step3 admin={adminData} etab={etabData} />}
-              {step === 4 && (                                    // ← ajout
+              {/* {step === 4 && (
                 <Step4
                   sigRef={sigRef}
                   onSignatureEnd={onSignatureEnd}
                   onClear={clearSignature}
                   signatureError={signatureError}
                 />
-              )}
+              )} */}
               {/* Navigation */}
               <div className={`flex gap-3 mt-8 ${step > 1 ? 'justify-between' : 'justify-end'}`}>
                 {step > 1 && (
@@ -624,7 +624,7 @@ const handleSubmit = async () => {
                     Retour
                   </button>
                 )}
-                {step < 4 ? (
+                {step < 3 ? (
                   <button
                     onClick={handleNext}
                     className="group flex items-center gap-2 px-7 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md shadow-blue-200 hover:shadow-lg hover:shadow-blue-300 transition-all duration-200 hover:-translate-y-0.5 ml-auto"
@@ -645,12 +645,12 @@ const handleSubmit = async () => {
               </div>
             </div>
 
-            <p className="text-center text-sm text-gray-500 mt-6">
+            {/* <p className="text-center text-sm text-gray-500 mt-6">
               Déjà inscrit ?{' '}
               <button onClick={() => navigate('/login')} className="text-blue-600 font-medium hover:text-blue-700 transition-colors">
                 Se connecter
               </button>
-            </p>
+            </p> */}
           </div>
         </div>
       </div>
