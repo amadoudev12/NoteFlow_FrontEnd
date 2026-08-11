@@ -579,14 +579,29 @@ export default function App() {
   useEffect(()=>{
     const token  = localStorage.getItem('token')
     if(token){
-      const decodedToken = jwtDecode(token).user
-      if(decodedToken.role === "ADMIN") {
-        navigate('/dashboard/admin')
-      }else if (decodedToken.role === "ENSEIGNANT"){
-        navigate('/dashboard/enseignant')
-      }else {
-        navigate('/dashboard/eleve')
-      }
+      const decodedToken = jwtDecode(token)
+      const role = decodedToken?.user?.user?.role || decodedToken?.user?.role || decodedToken?.role 
+      switch (role) {
+                case 'ENSEIGNANT':
+                    navigate('/dashboard/enseignant');
+                    break;
+
+                case 'ELEVE':
+                    navigate('/dashboard/eleve');
+                    break;
+
+                case 'ADMIN':
+                    navigate('/dashboard/admin');
+                    break;
+
+                case 'SUPERADMIN':
+                case 'SUPER_ADMIN':
+                    navigate('/dashboard/super-admin');
+                    break;
+
+                default:
+                    navigate('/login');
+            }
       console.log(decodedToken)
     }
   },[])

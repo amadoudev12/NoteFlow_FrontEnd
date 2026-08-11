@@ -32,7 +32,10 @@ export default function LoginComponent() {
         const role = token.user?.user?.role || token.user?.role || token.role;
         const firstLogin = token.user?.user?.firstLogin ?? token.user?.firstLogin ?? token.firstLogin;
 
-        if (firstLogin && role === 'ENSEIGNANT') {
+        const doitCompleterPremiereConnexion =
+          firstLogin && role !== 'SUPERADMIN' && role !== 'SUPER_ADMIN';
+
+        if (doitCompleterPremiereConnexion) {
           localStorage.setItem('role', role);
           navigate('/modification');
           return;
@@ -54,7 +57,7 @@ export default function LoginComponent() {
           navigate('/login')
         }
       }
-    } catch (err) {
+    } catch {
       setError('Identifiants incorrects, veuillez réessayer.');
     } finally {
       setLoading(false); // ← loader disparaît toujours

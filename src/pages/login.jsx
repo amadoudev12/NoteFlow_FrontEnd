@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
-export default function login() {
+export default function Login() {
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -16,7 +16,10 @@ export default function login() {
             const role = decodedToken?.user?.user?.role || decodedToken?.user?.role || decodedToken?.role 
             const firstLogin = decodedToken?.user?.user?.firstLogin ?? decodedToken?.user?.firstLogin ?? decodedToken?.firstLogin
 
-            if (firstLogin && role === "ENSEIGNANT") {
+            const doitCompleterPremiereConnexion =
+                firstLogin && role !== "SUPERADMIN" && role !== "SUPER_ADMIN"
+
+            if (doitCompleterPremiereConnexion) {
                 navigate('/modification')
                 return
             }

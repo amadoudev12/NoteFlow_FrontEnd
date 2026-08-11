@@ -237,6 +237,7 @@ function AbsencesModal({ open, onClose, loading, absences, nomClasse, trimestreL
                   <th className="pb-3 pr-4">Élève</th>
                   <th className="pb-3 pr-4">Matière</th>
                   <th className="pb-3 pr-4">Date</th>
+                  <th className="pb-3 pr-4">Heures</th>
                   <th className="pb-3 text-right">Statut</th>
                 </tr>
               </thead>
@@ -257,6 +258,9 @@ function AbsencesModal({ open, onClose, loading, absences, nomClasse, trimestreL
                     </td>
                     <td className="py-3 pr-4 text-slate-600">
                       {a.date?.slice(0, 10)}
+                    </td>
+                    <td className="py-3 pr-4 text-slate-600">
+                      {a.nombreHeures ?? 1} h
                     </td>
                     <td className="py-3 text-right">
                       <span className="inline-block bg-red-50 text-red-600 text-xs font-semibold px-2.5 py-1 rounded-full">

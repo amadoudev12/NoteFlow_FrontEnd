@@ -15,6 +15,10 @@ export default function FaireAppel() {
   const [eleves, setEleves] = useState([]);
   // { [matricule]: "ABSENT" | "RETARD" }
   const [statuts, setStatuts] = useState({});
+  // { [matricule]: nombre d'heures } — propre à chaque élève sélectionné
+  const [heuresParEleve, setHeuresParEleve] = useState({});
+  // { [matricule]: "oui" | "non" } — propre à chaque élève sélectionné
+  const [justificationsParEleve, setJustificationsParEleve] = useState({});
 
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
 
@@ -47,6 +51,8 @@ export default function FaireAppel() {
     setAffectation("");
     setEleves([]);
     setStatuts({});
+    setHeuresParEleve({});
+    setJustificationsParEleve({});
   };
 
   const chargerEleves = async () => {
@@ -69,15 +75,40 @@ export default function FaireAppel() {
 
   // Sélectionne un statut pour un élève, ou le retire si déjà actif (toggle)
   const setStatut = (matricule, statut) => {
+    const statutDejaSelectionne = statuts[matricule] === statut;
     setStatuts((prev) => {
       const next = { ...prev };
-      if (next[matricule] === statut) {
+      if (statutDejaSelectionne) {
         delete next[matricule];
       } else {
         next[matricule] = statut;
       }
       return next;
     });
+    setHeuresParEleve((prev) => {
+      if (statutDejaSelectionne) {
+        const next = { ...prev };
+        delete next[matricule];
+        return next;
+      }
+      return { ...prev, [matricule]: prev[matricule] ?? 1 };
+    });
+    setJustificationsParEleve((prev) => {
+      if (statutDejaSelectionne) {
+        const next = { ...prev };
+        delete next[matricule];
+        return next;
+      }
+      return { ...prev, [matricule]: prev[matricule] ?? "non" };
+    });
+  };
+
+  const setNombreHeuresEleve = (matricule, valeur) => {
+    setHeuresParEleve((prev) => ({ ...prev, [matricule]: valeur }));
+  };
+
+  const setJustificationEleve = (matricule, valeur) => {
+    setJustificationsParEleve((prev) => ({ ...prev, [matricule]: valeur }));
   };
 
   const absentsCount = Object.values(statuts).filter((s) => s === "ABSENT").length;
@@ -96,17 +127,31 @@ export default function FaireAppel() {
       return;
     }
 
+    const elevesSelectionnes = entries.map(([matricule, statut]) => ({
+      matricule,
+      statut,
+      nombreHeures: Number(heuresParEleve[matricule]),
+      justifie: justificationsParEleve[matricule] ?? "non",
+    }));
+
+    if (elevesSelectionnes.some(({ nombreHeures }) => !Number.isInteger(nombreHeures) || nombreHeures <= 0)) {
+      toast.error("Le nombre d'heures de chaque élève doit être un entier supérieur à 0");
+      return;
+    }
+
     try {
       setLoading(true);
 
       await absenceService.postAbsence({
         affectationId: Number(affectation),
         date,
-        eleves: entries.map(([matricule, statut]) => ({ matricule, statut })),
+        eleves: elevesSelectionnes,
       });
 
       toast.success("Absences enregistrées avec succès");
       setStatuts({});
+      setHeuresParEleve({});
+      setJustificationsParEleve({});
     } catch (error) {
       console.error(error);
       toast.error(error.response?.data?.message || "Erreur lors de l'enregistrement");
@@ -221,6 +266,8 @@ export default function FaireAppel() {
                     {retardsCount} retard{retardsCount > 1 ? "s" : ""}
                   </span>
                 )}
+                <span className="font-semibold">Heures</span>
+                <span className="font-semibold">Justification</span>
                 <span className="font-semibold">Statut</span>
               </div>
             </div>
@@ -245,6 +292,28 @@ export default function FaireAppel() {
                     </div>
 
                     <div className="flex items-center gap-2">
+                      {(isAbsent || isRetard) && (
+                        <>
+                          <input
+                            type="number"
+                            min="1"
+                            step="1"
+                            aria-label={`Nombre d'heures pour ${eleve.nom} ${eleve.prenom}`}
+                            className="w-16 border border-blue-200 rounded-lg px-2 py-1.5 bg-blue-50/50 text-center text-sm text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                            value={heuresParEleve[eleve.matricule] ?? 1}
+                            onChange={(e) => setNombreHeuresEleve(eleve.matricule, e.target.value)}
+                          />
+                          <select
+                            aria-label={`Justification pour ${eleve.nom} ${eleve.prenom}`}
+                            className="border border-blue-200 rounded-lg px-2 py-1.5 bg-blue-50/50 text-sm text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                            value={justificationsParEleve[eleve.matricule] ?? "non"}
+                            onChange={(e) => setJustificationEleve(eleve.matricule, e.target.value)}
+                          >
+                            <option value="non">Non justifiée</option>
+                            <option value="oui">Justifiée</option>
+                          </select>
+                        </>
+                      )}
                       <button
                         type="button"
                         onClick={() => setStatut(eleve.matricule, "ABSENT")}

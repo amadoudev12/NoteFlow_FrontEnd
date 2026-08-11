@@ -30,24 +30,24 @@ export default function FirstLogin() {
     }, [navigate])
 
     const updateUser = async (formData) => {
-        try {
-            const res = await userService.updateUser(formData)
-            if (res.status === 200 || res.status === 201) {
-                // le token en localStorage contient encore firstLogin: true,
-                // il faut le supprimer sinon /login rebondit direct vers /modification
-                localStorage.removeItem('token')
-                navigate('/login')
-                return
-            }
-        } catch (err) {
-            console.log(err)
+        const res = await userService.updateUser(formData)
+        const { token, configurationComplete, firstLogin, signatureComplete, role } = res.data || {}
+        const signatureRequise = ['ADMIN', 'ENSEIGNANT'].includes(role)
+        if (!token || !configurationComplete || firstLogin !== false || (signatureRequise && signatureComplete !== true)) {
+            throw new Error('La configuration du compte n’a pas été confirmée par le serveur.')
         }
+        const destinations = { ADMIN: '/dashboard/admin', ENSEIGNANT: '/dashboard/enseignant', ELEVE: '/dashboard/eleve' }
+        if (!destinations[role]) throw new Error('Rôle utilisateur inconnu.')
+        localStorage.setItem('token', token)
+        localStorage.setItem('role', role)
+        return destinations[role]
     }
 
     return (
         <FirstLoginComponnent
             userName={profile?.nom || user?.login}
             onFormDataReady={updateUser}
+            onCompleted={(destination) => navigate(destination, { replace: true })}
             user={user}
         />
     )

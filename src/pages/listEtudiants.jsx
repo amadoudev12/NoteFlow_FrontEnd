@@ -258,7 +258,7 @@ export default function StudentTable() {
     };
 
     const handleAbsenceChange = (matricule, value) => {
-        if (value === "" || (Number(value) >= 0 && Number.isInteger(Number(value))))
+        if (value === "" || (Number(value) > 0 && Number.isInteger(Number(value))))
             setAbsences((p) => ({ ...p, [matricule]: {...p[matricule], nombre:value} }));
     }
     const handleJustifieChange = (matricule, value) => {
@@ -444,9 +444,9 @@ export default function StudentTable() {
                                                             <td style={{ textAlign: "center", display: "flex", gap: "8px", justifyContent: "center" }}>
                                                                 <input
                                                                     type="number"
-                                                                    min="0"
+                                                                    min="1"
                                                                     step="1"
-                                                                    placeholder="0"
+                                                                    placeholder="1"
                                                                     value={absences[s.matricule]?.nombre ?? ""}
                                                                     onChange={(e) => handleAbsenceChange(s.matricule, e.target.value)}
                                                                     className="absence-input"

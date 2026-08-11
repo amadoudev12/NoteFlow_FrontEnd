@@ -53,7 +53,7 @@ export default function DashboardPage() {
         <KPICard icon={Building2} label="Total établissements" value={String(stats.totalEtablissements || 0)} trend="" trendLabel="" gradient="bg-gradient-to-r from-blue-500 to-blue-700" />
         <KPICard icon={CheckCircle2} label="Établissements actifs" value={String(stats.etablissementsActifs || 0)} trend="" trendLabel="" gradient="bg-gradient-to-r from-green-500 to-green-700" />
         <KPICard icon={Users} label="Directeurs" value={String(stats.directeurs || 0)} trend="" trendLabel="" gradient="bg-gradient-to-r from-orange-400 to-orange-600" />
-        <KPICard icon={CalendarRange} label="Année académique active" value={stats.anneeActive || '—'} gradient="bg-gradient-to-r from-slate-500 to-slate-700" trendLabel="" />
+        {/* <KPICard icon={CalendarRange} label="Année académique active" value={stats.anneeActive || '—'} gradient="bg-gradient-to-r from-slate-500 to-slate-700" trendLabel="" /> */}
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -158,7 +158,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <div>
+      {/* <div>
         <SectionTitle eyebrow="Raccourcis" title="Actions rapides" />
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
           <QuickAction icon={Plus} label="Créer un établissement" color="blue" />
@@ -166,7 +166,7 @@ export default function DashboardPage() {
           <QuickAction icon={CalendarCheck2} label="Nouvelle année académique" color="orange" />
           <QuickAction icon={BookPlus} label="Créer un trimestre" color="slate" />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

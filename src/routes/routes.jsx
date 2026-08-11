@@ -31,6 +31,7 @@ const NotesPage = lazy(()=>import('../pages/NotesPages.jsx'))
 const StatistiquesPages = lazy(()=> import('../pages/ClassesStat.jsx'))
 const StatistiquesClassePages = lazy(()=>import('../pages/StatistiquesClasse.jsx'))
 const MesAbsences = lazy(()=> import('../pages/MesAbsences.jsx'))
+const CalendrierScolaire = lazy(()=> import('../pages/CalendrierScolaire.jsx'))
 const SUPERADMIN  = lazy(()=> import('../pages/SuperAdmin.jsx'))
 const SuperAdminDashboard = lazy(()=> import('../pages/super-admin/DashboardPage.jsx'))
 const SuperAdminEtablissements = lazy(()=> import('../pages/super-admin/EtablissementsPage.jsx'))
@@ -64,6 +65,7 @@ return (
                     <Route path='/dashboard-admin/liste-eleve/:id' element={<ListeEleve/>}/>
                     {/* <Route path='/dashboard/admin/trimestre' element={<Trimestre/>}/> */}
                     <Route path='/dashboard/admin/etablissement' element={<Etablissement/>}/>
+                    <Route path='/dashboard/admin/calendrier' element={<CalendrierScolaire/>}/>
                     <Route path='/dashboard/bulletins' element={<Bulletins/>}/>
                     <Route path='/dashboard/admin/meilleur-eleves' element={<TopClasse/>}/>
                     <Route path='/dashboard/admin/mauvais-eleves' element={<BadEleves/>}/>
@@ -80,8 +82,6 @@ return (
                     <Route index element={<SuperAdminDashboard/>}/>
                     <Route path='etablissements' element={<SuperAdminEtablissements/>}/>
                     <Route path='directeurs' element={<SuperAdminDirecteurs/>}/>
-                    <Route path='annees' element={<SuperAdminAnnees/>}/>
-                    <Route path='trimestres' element={<SuperAdminTrimestres/>}/>
                     <Route path='statistiques' element={<SuperAdminStatistiques/>}/>
                     <Route path='logs' element={<SuperAdminLogs/>}/>
                     <Route path='parametres' element={<SuperAdminParametres/>}/>

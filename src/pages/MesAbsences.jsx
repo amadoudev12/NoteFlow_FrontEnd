@@ -37,6 +37,7 @@ export default function MesAbsences() {
   const absents = absences.filter((a) => a.statut === "ABSENT").length;
   const retards = absences.filter((a) => a.statut === "RETARD").length;
   const justifiees = absences.filter((a) => a.justifie === "oui").length;
+  const totalHeures = absences.reduce((total, absence) => total + (absence.nombreHeures ?? 1), 0);
 
   if (loading) {
     return (
@@ -114,6 +115,12 @@ export default function MesAbsences() {
             value={justifiees}
             accent="#22c55e"
           />
+          <StatCard
+            icon={<Clock3 className="w-5 h-5" />}
+            title="Heures"
+            value={`${totalHeures} h`}
+            accent="#2563EB"
+          />
         </div>
 
         {/* ── Tableau ── */}
@@ -133,13 +140,14 @@ export default function MesAbsences() {
                   <th className="px-6 py-3">Matière</th>
                   <th className="px-6 py-3">Trimestre</th>
                   <th className="px-6 py-3">Statut</th>
+                  <th className="px-6 py-3">Heures</th>
                   <th className="px-6 py-3">Justification</th>
                 </tr>
               </thead>
               <tbody>
                 {absences.length === 0 && (
                   <tr>
-                    <td colSpan="5" className="text-center py-14">
+                    <td colSpan="6" className="text-center py-14">
                       <div className="flex flex-col items-center gap-2">
                         <AlertCircle className="w-8 h-8 text-blue-200" />
                         <p className="text-slate-400 font-medium">
@@ -179,6 +187,9 @@ export default function MesAbsences() {
                         )}
                         {absence.statut}
                       </span>
+                    </td>
+                    <td className="px-6 py-4 text-slate-600">
+                      {absence.nombreHeures ?? 1} h
                     </td>
                     <td className="px-6 py-4">
                       {absence.justifie === "oui" ? (

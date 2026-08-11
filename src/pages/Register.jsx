@@ -511,9 +511,9 @@ export default function RegisterPage() {
   };
 
   const stepTitle = {
-    1: { title: 'Créer votre compte', sub: 'Renseignez les informations de l\'administrateur' },
-    2: { title: 'Votre établissement', sub: 'Informations sur votre établissement scolaire' },
-    3: { title: 'Récapitulatif', sub: 'Vérifiez vos informations avant de valider' },
+    1: { title: 'Créer le  compte administrateur', sub: 'Renseignez les informations de l\'administrateur' },
+    2: { title: ' Etablissement', sub: "Informations sur l' établissement scolaire" },
+    3: { title: 'Récapitulatif', sub: 'Vérifiez les  informations avant de valider' },
     // 4: { title: 'Signature',             sub: 'Apposez la signature officielle du directeur' }
   }[step];
 
@@ -638,7 +638,7 @@ export default function RegisterPage() {
                     disabled={loading}
                     className="group flex items-center gap-2 px-7 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl shadow-md shadow-blue-200 hover:shadow-lg hover:shadow-blue-300 transition-all duration-200 hover:-translate-y-0.5 ml-auto"
                   >
-                    {loading ? 'Création…' : 'Créer mon établissement'}
+                    {loading ? 'Création…' : 'Enregistrer '}
                     {!loading && <Icon d={icons.arrow} size={16} className="group-hover:translate-x-0.5 transition-transform" />}
                   </button>
                 )}

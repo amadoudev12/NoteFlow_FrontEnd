@@ -36,8 +36,9 @@ export default function FirstLoginComponent({
   userName,
   user,
   onFormDataReady,
+  onCompleted,
 }) {
-  const isEnseignant = user?.role === "ENSEIGNANT";
+  const signatureRequise = ["ENSEIGNANT", "ADMIN"].includes(user?.role);
   const sigRef = useRef();
 
   const [step, setStep] = useState(1);
@@ -45,6 +46,7 @@ export default function FirstLoginComponent({
   const [signatureError, setSignatureError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -62,7 +64,7 @@ export default function FirstLoginComponent({
   // ETAPES
 
 
-  const totalStep = isEnseignant ? 2 : 1;
+  const totalStep = signatureRequise ? 2 : 1;
   const progress = Math.round((step / totalStep) * 100);
 
   // PASSER A SIGNATURE
@@ -70,7 +72,7 @@ export default function FirstLoginComponent({
     const valid = await trigger(["password", "confirmPassword"]);
     if (!valid) return;
 
-    if (isEnseignant) {
+    if (signatureRequise) {
       setStep(2);
     } else {
       document.querySelector("form")?.requestSubmit();
@@ -95,28 +97,32 @@ export default function FirstLoginComponent({
   // SUBMIT
 
   const submit = async (values) => {
-    if (isEnseignant && !hasSignature) {
+    if (signatureRequise && !hasSignature) {
       setSignatureError("Veuillez ajouter votre signature");
       return;
     }
 
     try {
       setLoading(true);
+      setSubmitError("");
 
       const formData = new FormData();
       formData.append("password", values.password);
 
-      if (isEnseignant) {
+      if (signatureRequise) {
         const blob = await new Promise((resolve) => {
           sigRef.current.getCanvas().toBlob(resolve, "image/png");
         });
         formData.append("signature", blob, "signature.png");
       }
 
-      await onFormDataReady(formData);
+      const destination = await onFormDataReady(formData);
       setSuccess(true);
+      // The token has already been refreshed and completion confirmed here.
+      setTimeout(() => onCompleted(destination), 700);
     } catch (err) {
       console.error(err);
+      setSubmitError(err.response?.data?.message || err.message || "Impossible de terminer la configuration.");
     } finally {
       setLoading(false);
     }
@@ -146,7 +152,7 @@ export default function FirstLoginComponent({
               </div>
               <p className="font-bold text-slate-800">Configuration terminée</p>
               <p className="text-sm text-slate-500 mt-1">
-                Vous pouvez maintenant vous connecter.
+                Redirection vers votre espace…
               </p>
             </div>
           ) : (
@@ -173,6 +179,7 @@ export default function FirstLoginComponent({
               </div>
 
               <form onSubmit={handleSubmit(submit)}>
+                {submitError && <p className="mb-3 rounded-lg bg-red-50 p-3 text-sm text-red-700">{submitError}</p>}
                 {step === 1 && (
                   <div className="space-y-4">
                     <div>
@@ -245,7 +252,7 @@ export default function FirstLoginComponent({
                   </div>
                 )}
 
-                {isEnseignant && step === 2 && (
+                {signatureRequise && step === 2 && (
                   <div>
                     <div className="flex items-center gap-2 mb-3">
                       <PenTool className="w-4 h-4 text-blue-600" />

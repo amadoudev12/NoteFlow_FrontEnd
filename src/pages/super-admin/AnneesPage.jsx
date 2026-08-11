@@ -12,7 +12,7 @@ const emptyForm = {
 const normalizeAnnee = (item) => ({
   id: item.id,
   libelle: item.libelle,
-  statut: item.actif ? "active" : "archivee",
+  statut: "",
   etablissements: item.etablissements ?? 0,
   debut: item.date_debut ? new Date(item.date_debut).toLocaleDateString("fr-FR") : item.debut || "—",
   fin: item.date_fin ? new Date(item.date_fin).toLocaleDateString("fr-FR") : item.fin || "—"
@@ -102,18 +102,18 @@ export default function AnneesPage() {
               </div>
               <span className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 px-3 py-1 rounded-full bg-slate-100">{a.statut}</span>
             </div>
-            <div className="mt-5 flex items-center justify-between text-sm font-body">
+            {/* <div className="mt-5 flex items-center justify-between text-sm font-body">
               <span className="text-slate-400">Établissements rattachés</span>
               <span className="font-bold text-slate-800">{a.etablissements}</span>
-            </div>
-            {a.statut !== "active" && (
+            </div> */}
+            {/* {a.statut !== "active" && (
               <button
                 onClick={() => handleActivate(a.id)}
                 className="mt-4 w-full text-center text-xs font-bold text-blue-600 border border-blue-100 bg-blue-50/60 rounded-lg py-2 hover:bg-blue-50 transition-colors font-body"
               >
                 Activer cette année
               </button>
-            )}
+            )} */}
           </Card>
         ))}
       </div>
