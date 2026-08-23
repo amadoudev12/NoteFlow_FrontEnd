@@ -82,26 +82,23 @@ function Navbar() {
             </a>
           ))}
         </div> */}
-        <div className=" md:flex items-center gap-3">
-          <button className="text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
-                  <a
-                    href="https://wa.me/2250566009210?text=Bonjour%20je%20souhaite%20obtenir%20des%20informations%20sur%20NoteFlow."
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Nous contacter
-                  </a>
-          </button>
-          {/* <button className="text-sm font-medium text-slate-700 hover:text-blue-600 transition-colors px-4 py-2">
-            Connexion
-          </button>
-          <button className="text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
-            Commencer
-          </button> */}
-        </div>
-        {/* <button className="md:hidden p-2 text-slate-700" onClick={() => setOpen(!open)}>
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button> */}
+      <div className="flex items-center gap-3">
+        <a
+          href="https://wa.me/2250566009210?text=Bonjour%20je%20souhaite%20obtenir%20des%20informations%20sur%20NoteFlow."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center text-sm font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 px-4 py-2.5 rounded-lg transition-all duration-200"
+        >
+          Nous contacter
+        </a>
+
+        <button
+          type="button"
+          className="inline-flex items-center justify-center text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg transition-all duration-200 hover:shadow-md"
+        >
+          Connexion
+        </button>
+      </div>
       </div>
       {/* {open && (
         <div className="md:hidden bg-white border-t border-slate-100 px-6 py-4 flex flex-col gap-4">

@@ -35,7 +35,7 @@ const NAV = [
     { icon: BookOpen,        label: "Matières",                  path: "/dashboard/admin/matieres" },
     { icon: Users,           label: "Classes",                   path: "/dashboard/admin/classes" },
     { icon: Upload,          label: "Import de données",         path: "/dashboard/admin/import" },
-    { icon: UserCheck,       label: "Affectation du personnel",  path: "/dashboard/admin/affectation" },
+    { icon: UserCheck,       label: "Affectation des enseignants",  path: "/dashboard/admin/affectation" },
 ];
 
 // ─── SIDEBAR ──────────────────────────────────────────────────────────────────

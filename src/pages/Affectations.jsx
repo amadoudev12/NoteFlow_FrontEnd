@@ -486,7 +486,7 @@ export default function AffectationPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-slate-50 border-b border-slate-100">
-                      {["Classe", "Matière", "Enseignant", "Matricule", "Coeff", "Actions"].map((h) => (
+                      {["Classe", "Matière", "Enseignant",  "Coeff", "Actions"].map((h) => (
                         <th
                           key={h}
                           className="px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider"
@@ -519,19 +519,19 @@ export default function AffectationPage() {
                           {/* Enseignant */}
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
-                              <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-xs font-semibold text-blue-700 shrink-0">
+                              {/* <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-xs font-semibold text-blue-700 shrink-0">
                                 {a.enseignant ? getInitials(a.enseignant) : "??"}
-                              </div>
+                              </div> */}
                               <span className="text-slate-700 text-sm">{a.nomEnseignant}</span>
                             </div>
                           </td>
 
                           {/* Matricule */}
-                          <td className="px-4 py-3">
+                          {/* <td className="px-4 py-3">
                             <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 text-slate-500 text-xs font-mono">
                               {a.matricule}
                             </span>
-                          </td>
+                          </td> */}
 
                           {/* Coeff */}
                           <td className="px-4 py-3">

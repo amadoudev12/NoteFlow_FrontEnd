@@ -13,6 +13,12 @@ import {
 import anneeService from '../../services/anneeAcademiqueService';
 import trimestreService from '../../services/trimestreService';
 
+const TRIMESTRES_TYPES = [
+  { ordre: 1, libelle: 'Premier trimestre' },
+  { ordre: 2, libelle: 'Deuxième trimestre' },
+  { ordre: 3, libelle: 'Troisième trimestre' },
+];
+
 export default function CalendrierScolaire() {
   const [annees, setAnnees] = useState([]);
   const [selected, setSelected] = useState('');
@@ -76,6 +82,25 @@ export default function CalendrierScolaire() {
 
   const yearActive = annees.find((a) => a.actif);
   const totalTrimestres = annees.reduce((sum, a) => sum + (a.trimestres?.length || 0), 0);
+
+  // Trimestres déjà créés pour l'année académique sélectionnée dans l'onglet "Trimestre"
+  const selectedYearTrimestres = annees.find((a) => String(a.id) === String(selected))?.trimestres || [];
+
+  // Trimestres pas encore créés pour cette année (par libelle ou ordre)
+  const trimestresDisponibles = TRIMESTRES_TYPES.filter(
+    (type) => !selectedYearTrimestres.some((t) => t.libelle === type.libelle || t.ordre === type.ordre)
+  );
+
+  // Sélectionne automatiquement le prochain trimestre disponible dès que l'année choisie ou la liste change
+  useEffect(() => {
+    if (trimestresDisponibles.length > 0) {
+      const prochain = trimestresDisponibles[0];
+      setTerm((p) => ({ ...p, nom: prochain.libelle, ordre: prochain.ordre }));
+    } else {
+      setTerm((p) => ({ ...p, nom: '', ordre: '' }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected, annees]);
 
   const fmt = (d) =>
     d ? new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
@@ -309,26 +334,27 @@ export default function CalendrierScolaire() {
                 </select>
               </div>
               <div>
-                <label className="text-xs font-medium text-slate-500 mb-1 block">Libellé</label>
-                <input
+                <label className="text-xs font-medium text-slate-500 mb-1 block">Trimestre</label>
+                <select
                   required
-                  placeholder="Premier trimestre"
                   value={term.nom}
-                  onChange={(e) => setTerm({ ...term, nom: e.target.value })}
-                  className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label className="text-xs font-medium text-slate-500 mb-1 block">Ordre</label>
-                <input
-                  required
-                  type="number"
-                  min="1"
-                  placeholder="1"
-                  value={term.ordre}
-                  onChange={(e) => setTerm({ ...term, ordre: e.target.value })}
-                  className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
+                  onChange={(e) => {
+                    const sel = TRIMESTRES_TYPES.find((t) => t.libelle === e.target.value);
+                    setTerm((p) => ({ ...p, nom: sel?.libelle || '', ordre: sel?.ordre || '' }));
+                  }}
+                  disabled={!selected || trimestresDisponibles.length === 0}
+                  className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-slate-100 disabled:text-slate-400"
+                >
+                  <option value="" disabled>Sélectionner un trimestre</option>
+                  {trimestresDisponibles.map((t) => (
+                    <option key={t.ordre} value={t.libelle}>
+                      {t.libelle}
+                    </option>
+                  ))}
+                </select>
+                {selected && trimestresDisponibles.length === 0 && (
+                  <p className="text-xs text-slate-400 mt-1">Tous les trimestres ont déjà été créés pour cette année.</p>
+                )}
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>

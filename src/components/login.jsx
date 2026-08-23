@@ -169,12 +169,12 @@ export default function LoginComponent() {
 
             </form>
           </div>
-            <p className="text-center text-sm text-gray-500 mt-6">
+            {/* <p className="text-center text-sm text-gray-500 mt-6">
               pas de compte ?{' '}
               <button onClick={() => navigate('/register')} className="text-blue-600 font-medium hover:text-blue-700 transition-colors">
                 S'inscrire
               </button>
-            </p>
+            </p> */}
         </div>
       </div>
     </>
