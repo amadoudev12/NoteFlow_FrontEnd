@@ -119,85 +119,214 @@ function ConfirmModal({ item, label, onCancel, onConfirm }) {
 
 // ─── Edit Modal ───────────────────────────────────────────────────────────────
 
-function EditModal({ item, allItems, label, accentClass, onClose, onSave }) {
-    const [nom, setNom] = useState(item[cfg.nameKey])
-    const [error, setError] = useState("");
+// function EditModal({ item, allItems, label, accentClass, onClose, onSave }) {
+//     const [nom, setNom] = useState(item[cfg.nameKey])
+//     const [error, setError] = useState("");
 
-    const handleSave = () => {
-        const trimmed = nom.trim();
-        if (!trimmed) { setError("Le nom est obligatoire."); return; }
-        const doublon = allItems.find(
-        (m) => m.id !== item.id && normalize(m.nom) === normalize(trimmed)
-        );
-        if (doublon) { setError(`Ce${label === "Classe" ? "tte" : "tte"} ${label.toLowerCase()} existe déjà.`); return; }
-        onSave({ ...item, nom: trimmed });
-    };
+//     const handleSave = () => {
+//         const trimmed = nom.trim();
+//         if (!trimmed) { setError("Le nom est obligatoire."); return; }
+//         const doublon = allItems.find(
+//         (m) => m.id !== item.id && normalize(m.nom) === normalize(trimmed)
+//         );
+//         if (doublon) { setError(`Ce${label === "Classe" ? "tte" : "tte"} ${label.toLowerCase()} existe déjà.`); return; }
+//         onSave({ ...item, nom: trimmed });
+//     };
 
-    return (
-        <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
-        onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
-        >
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-md">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-            <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center">
-                <Pencil size={15} className="text-amber-600" />
-                </div>
-                <div>
-                <h3 className="font-semibold text-slate-800 text-base">Modifier {label.toLowerCase()}</h3>
-                <p className="text-xs text-slate-400">ID #{item.id}</p>
-                </div>
-            </div>
-            <button
-                onClick={onClose}
-                className="w-8 h-8 flex items-center justify-center rounded-xl text-slate-400
-                hover:bg-slate-100 hover:text-slate-600 transition-all duration-150"
-            >
-                <X size={16} />
-            </button>
+//     return (
+//         <div
+//         className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+//         onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+//         >
+//         <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-md">
+//             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+//             <div className="flex items-center gap-3">
+//                 <div className="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center">
+//                 <Pencil size={15} className="text-amber-600" />
+//                 </div>
+//                 <div>
+//                 <h3 className="font-semibold text-slate-800 text-base">Modifier {label.toLowerCase()}</h3>
+//                 <p className="text-xs text-slate-400">ID #{item.id}</p>
+//                 </div>
+//             </div>
+//             <button
+//                 onClick={onClose}
+//                 className="w-8 h-8 flex items-center justify-center rounded-xl text-slate-400
+//                 hover:bg-slate-100 hover:text-slate-600 transition-all duration-150"
+//             >
+//                 <X size={16} />
+//             </button>
+//             </div>
+
+//             <div className="px-6 py-5">
+//             <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide flex items-center gap-1.5 mb-1.5">
+//                 Nom {label.toLowerCase()}
+//             </label>
+//             <input
+//                 autoFocus
+//                 type="text"
+//                 value={nom}
+//                 onChange={(e) => { setNom(e.target.value); setError(""); }}
+//                 onKeyDown={(e) => e.key === "Enter" && handleSave()}
+//                 placeholder={`Ex : ${label === "Matière" ? "Mathématiques" : "Terminale A"}`}
+//                 className={`w-full px-3 py-2.5 text-sm rounded-xl border bg-white text-slate-800
+//                 transition-all duration-150 outline-none
+//                 ${error
+//                     ? "border-red-400 ring-2 ring-red-100"
+//                     : `border-slate-200 hover:border-slate-300 focus:border-amber-400 focus:ring-2 focus:ring-amber-100`
+//                 }`}
+//             />
+//             {error && <p className="text-xs text-red-500 mt-1.5">{error}</p>}
+//             </div>
+
+//             <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-2xl">
+//             <button
+//                 onClick={onClose}
+//                 className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-slate-600
+//                 hover:bg-white hover:border-slate-300 transition-all duration-150 text-sm font-medium"
+//             >
+//                 <X size={13} /> Annuler
+//             </button>
+//             <button
+//                 onClick={handleSave}
+//                 className="flex items-center gap-2 px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600
+//                 active:scale-95 text-white text-sm font-semibold transition-all duration-150 shadow-sm shadow-amber-200"
+//             >
+//                 <Save size={13} /> Enregistrer
+//             </button>
+//             </div>
+//         </div>
+//         </div>
+// );
+// }
+function EditModal({
+  item,
+  allItems,
+  label,
+  nameKey,
+  onClose,
+  onSave,
+}) {
+  const [nom, setNom] = useState(item[nameKey] || "");
+  const [error, setError] = useState("");
+
+  const handleSave = () => {
+    const trimmed = nom.trim();
+
+    if (!trimmed) {
+      setError("Le nom est obligatoire.");
+      return;
+    }
+
+    const doublon = allItems.find(
+      (m) =>
+        m.id !== item.id &&
+        normalize(m[nameKey] || "") === normalize(trimmed)
+    );
+
+    if (doublon) {
+      setError(
+        `Cette ${label.toLowerCase()} existe déjà.`
+      );
+      return;
+    }
+
+    onSave({
+      ...item,
+      [nameKey]: trimmed,
+    });
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-md">
+
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center">
+              <Pencil size={15} className="text-amber-600" />
             </div>
 
-            <div className="px-6 py-5">
-            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide flex items-center gap-1.5 mb-1.5">
-                Nom {label.toLowerCase()}
-            </label>
-            <input
-                autoFocus
-                type="text"
-                value={nom}
-                onChange={(e) => { setNom(e.target.value); setError(""); }}
-                onKeyDown={(e) => e.key === "Enter" && handleSave()}
-                placeholder={`Ex : ${label === "Matière" ? "Mathématiques" : "Terminale A"}`}
-                className={`w-full px-3 py-2.5 text-sm rounded-xl border bg-white text-slate-800
-                transition-all duration-150 outline-none
-                ${error
-                    ? "border-red-400 ring-2 ring-red-100"
-                    : `border-slate-200 hover:border-slate-300 focus:border-amber-400 focus:ring-2 focus:ring-amber-100`
-                }`}
-            />
-            {error && <p className="text-xs text-red-500 mt-1.5">{error}</p>}
-            </div>
+            <div>
+              <h3 className="font-semibold text-slate-800 text-base">
+                Modifier {label.toLowerCase()}
+              </h3>
 
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-2xl">
-            <button
-                onClick={onClose}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-slate-600
-                hover:bg-white hover:border-slate-300 transition-all duration-150 text-sm font-medium"
-            >
-                <X size={13} /> Annuler
-            </button>
-            <button
-                onClick={handleSave}
-                className="flex items-center gap-2 px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600
-                active:scale-95 text-white text-sm font-semibold transition-all duration-150 shadow-sm shadow-amber-200"
-            >
-                <Save size={13} /> Enregistrer
-            </button>
+              <p className="text-xs text-slate-400">
+                ID #{item.id}
+              </p>
             </div>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-all duration-150"
+          >
+            <X size={16} />
+          </button>
         </div>
+
+        <div className="px-6 py-5">
+          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide flex items-center gap-1.5 mb-1.5">
+            Nom {label.toLowerCase()}
+          </label>
+
+          <input
+            autoFocus
+            type="text"
+            value={nom}
+            onChange={(e) => {
+              setNom(e.target.value);
+              setError("");
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSave();
+            }}
+            placeholder={
+              label === "Matière"
+                ? "Ex : Mathématiques"
+                : "Ex : Terminale A"
+            }
+            className={`w-full px-3 py-2.5 text-sm rounded-xl border bg-white text-slate-800 transition-all duration-150 outline-none ${
+              error
+                ? "border-red-400 ring-2 ring-red-100"
+                : "border-slate-200 hover:border-slate-300 focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+            }`}
+          />
+
+          {error && (
+            <p className="text-xs text-red-500 mt-1.5">
+              {error}
+            </p>
+          )}
         </div>
-);
+
+        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-2xl">
+          <button
+            onClick={onClose}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-white hover:border-slate-300 transition-all duration-150 text-sm font-medium"
+          >
+            <X size={13} />
+            Annuler
+          </button>
+
+          <button
+            onClick={handleSave}
+            className="flex items-center gap-2 px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-sm font-semibold transition-all duration-150 shadow-sm shadow-amber-200"
+          >
+            <Save size={13} />
+            Enregistrer
+          </button>
+        </div>
+
+      </div>
+    </div>
+  );
 }
 
 // ─── Main Component ───────────────────────────────────────────────────────────
