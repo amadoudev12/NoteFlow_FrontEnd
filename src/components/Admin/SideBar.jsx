@@ -14,7 +14,8 @@ import {
     BookOpen,
     Users,
     Upload,
-    UserCheck
+    UserCheck,
+    Archive
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -36,6 +37,7 @@ const NAV = [
     { icon: Users,           label: "Classes",                   path: "/dashboard/admin/classes" },
     { icon: Upload,          label: "Import de données",         path: "/dashboard/admin/import" },
     { icon: UserCheck,       label: "Affectation des enseignants",  path: "/dashboard/admin/affectation" },
+    { icon: Archive,         label: "Archives académiques",      path: "/dashboard/admin/archives" },
 ];
 
 // ─── SIDEBAR ──────────────────────────────────────────────────────────────────

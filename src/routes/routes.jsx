@@ -30,6 +30,11 @@ const Error500  = lazy(()=> import('../pages/Erreur500.jsx'))
 const NotesPage = lazy(()=>import('../pages/NotesPages.jsx'))
 const StatistiquesPages = lazy(()=> import('../pages/ClassesStat.jsx'))
 const StatistiquesClassePages = lazy(()=>import('../pages/StatistiquesClasse.jsx'))
+const ArchivesAcademiques = lazy(()=> import('../pages/ArchivesAcademiques.jsx'))
+const ArchiveTrimestreDetail = lazy(()=> import('../pages/ArchiveTrimestreDetail.jsx'))
+const ArchiveClasseDetail = lazy(()=> import('../pages/ArchiveClasseDetail.jsx'))
+const ArchiveEleveDetail = lazy(()=> import('../pages/ArchiveEleveDetail.jsx'))
+const ArchiveEleveHistorique = lazy(()=> import('../pages/ArchiveEleveHistorique.jsx'))
 const MesAbsences = lazy(()=> import('../pages/MesAbsences.jsx'))
 const CalendrierScolaire = lazy(()=> import('../pages/CalendrierScolaire.jsx'))
 const SUPERADMIN  = lazy(()=> import('../pages/SuperAdmin.jsx'))
@@ -75,6 +80,11 @@ return (
                     <Route path='/dashboard/admin/import' element={<Import/>}/>
                     <Route path='/dashboard/admin/statistique' element={<StatistiquesPages/>}/>
                     <Route path='/dashboard/admin/statistique/classe/:classeId' element={<StatistiquesClassePages/>}/>
+                    <Route path='/dashboard/admin/archives' element={<ArchivesAcademiques/>}/>
+                    <Route path='/dashboard/admin/archives/annees/:anneeId/trimestres/:trimestreId' element={<ArchiveTrimestreDetail/>}/>
+                    <Route path='/dashboard/admin/archives/trimestres/:trimestreId/classes/:classeId' element={<ArchiveClasseDetail/>}/>
+                    <Route path='/dashboard/admin/archives/trimestres/:trimestreId/eleves/:matricule' element={<ArchiveEleveDetail/>}/>
+                    <Route path='/dashboard/admin/archives/eleves/:matricule' element={<ArchiveEleveHistorique/>}/>
                 </Route>
                 <Route path='/dashboard/eleve' element={<EleveDashboard/>}/>
                 <Route path='/dashboard/eleve/mes-absences' element={<MesAbsences/>}/>
