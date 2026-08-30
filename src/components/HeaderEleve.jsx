@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import eleveService from "../../services/eleveService"
 import { Link } from "react-router-dom"
 import BulletinPreviewModal from "./BulletinPreviewModal"
@@ -9,7 +9,7 @@ function HeaderEleve({ eleve, onLogout }) {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [certLoading, setCertLoading] = useState(false)
-
+    const [periode, setPeriode] = useState(null)
     // --- États pour l'aperçu du bulletin ---
     const [showBulletinModal, setShowBulletinModal] = useState(false)
     const [bulletinPreviewUrl, setBulletinPreviewUrl] = useState(null)
@@ -19,6 +19,20 @@ function HeaderEleve({ eleve, onLogout }) {
         localStorage.removeItem("token")
         onLogout()
     }
+
+
+    useEffect(() => {
+        if (!eleve?.matricule_eleve) return
+        const fetchPeriodeActive = async () => {
+            try {
+                const res = await eleveService.getPeriodeActive(eleve.matricule_eleve)
+                setPeriode(res.data)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        fetchPeriodeActive()
+    }, [eleve?.matricule_eleve])
 
     // Récupère l'URL du bulletin, télécharge le PDF en blob (via axios, token auto-injecté),
     // puis ouvre la modale d'aperçu. Le blob évite le blocage CSP frame-ancestors sur l'iframe.
@@ -102,7 +116,7 @@ function HeaderEleve({ eleve, onLogout }) {
     }
 
     const initiales = `${eleve?.eleve?.prenom?.[0] ?? ""}${eleve?.eleve?.nom?.[0] ?? ""}`.toUpperCase()
-
+    // console.log(periode)
     return (
         <>
             <header className="bg-white border border-[#dce8f9] rounded-2xl overflow-hidden mb-5 shadow-sm">
@@ -160,6 +174,14 @@ function HeaderEleve({ eleve, onLogout }) {
                                 <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-100">
                                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
                                     Actif
+                                </span>
+                                <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-100">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                                    {periode?.anneeAcademique.libelle}
+                                </span>
+                                <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-100">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                                    {periode?.trimestreActive.libelle}
                                 </span>
                             </div>
                         </div>

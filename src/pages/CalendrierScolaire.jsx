@@ -32,6 +32,7 @@ export default function CalendrierScolaire() {
   const load = async () => {
     const { data } = await anneeService.list();
     setAnnees(data.annees);
+    console.log('annees', data.annees);
     const a = data.annees.find((x) => x.actif) || data.annees[0];
     if (a) {
       setSelected(String(a.id));
@@ -50,6 +51,10 @@ export default function CalendrierScolaire() {
 
   const createYear = async (e) => {
     e.preventDefault();
+    if (year.date_debut && year.date_fin && year.date_debut >= year.date_fin) {
+      notify('La date de fin doit être postérieure à la date de début.', 'error');
+      return;
+    }
     try {
       await anneeService.create(year);
       setYear({ libelle: '', date_debut: '', date_fin: '' });
@@ -62,6 +67,10 @@ export default function CalendrierScolaire() {
 
   const createTerm = async (e) => {
     e.preventDefault();
+    if (term.debut && term.fin && term.debut >= term.fin) {
+      notify('La date de fin doit être postérieure à la date de début.', 'error');
+      return;
+    }
     try {
       await trimestreService.postTrimestre({
         ...term,
@@ -82,6 +91,11 @@ export default function CalendrierScolaire() {
 
   const yearActive = annees.find((a) => a.actif);
   const totalTrimestres = annees.reduce((sum, a) => sum + (a.trimestres?.length || 0), 0);
+
+  // Trimestre actif, toutes années confondues
+  const activeTrimestre = annees
+    .flatMap((a) => a.trimestres || [])
+    .find((t) => t.actif);
 
   // Trimestres déjà créés pour l'année académique sélectionnée dans l'onglet "Trimestre"
   const selectedYearTrimestres = annees.find((a) => String(a.id) === String(selected))?.trimestres || [];
@@ -132,6 +146,19 @@ export default function CalendrierScolaire() {
           <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-2.5 text-center min-w-[130px]">
             <p className="text-xs text-blue-500 font-medium">Année active</p>
             <p className="text-lg font-bold text-blue-700 truncate">{yearActive?.libelle || '—'}</p>
+          </div>
+          <div className="bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-2.5 text-center min-w-[160px]">
+            <p className="text-xs text-emerald-500 font-medium">Trimestre actif</p>
+            {activeTrimestre ? (
+              <>
+                <p className="text-sm font-bold text-emerald-700 truncate">{activeTrimestre.libelle}</p>
+                <p className="text-[11px] text-emerald-500 mt-0.5">
+                  {fmt(activeTrimestre.date_debut)} → {fmt(activeTrimestre.date_fin)}
+                </p>
+              </>
+            ) : (
+              <p className="text-lg font-bold text-emerald-700">—</p>
+            )}
           </div>
         </div>
       </div>
@@ -228,8 +255,11 @@ export default function CalendrierScolaire() {
                                 <span className="font-medium text-slate-700">
                                   {t.ordre}. {t.libelle}
                                 </span>
+                                <span className="ml-auto text-xs text-slate-400">
+                                  {fmt(t.date_debut)} → {fmt(t.date_fin)}
+                                </span>
                                 {t.actif && (
-                                  <span className="ml-auto text-xs text-blue-600 font-medium">actif</span>
+                                  <span className="text-xs text-blue-600 font-medium">actif</span>
                                 )}
                               </li>
                             ))}
@@ -305,6 +335,13 @@ export default function CalendrierScolaire() {
                     required
                     type="date"
                     value={year.date_fin}
+                    min={
+                      year.date_debut
+                        ? new Date(new Date(year.date_debut).getTime() + 86400000)
+                            .toISOString()
+                            .slice(0, 10)
+                        : undefined
+                    }
                     onChange={(e) => setYear({ ...year, date_fin: e.target.value })}
                     className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -373,6 +410,13 @@ export default function CalendrierScolaire() {
                     required
                     type="date"
                     value={term.fin}
+                    min={
+                      term.debut
+                        ? new Date(new Date(term.debut).getTime() + 86400000)
+                            .toISOString()
+                            .slice(0, 10)
+                        : undefined
+                    }
                     onChange={(e) => setTerm({ ...term, fin: e.target.value })}
                     className="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />

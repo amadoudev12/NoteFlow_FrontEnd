@@ -107,7 +107,7 @@ function NotesRecentes() {
         const token_decoded = jwtDecode(token);
         const getNotes = async () => {
             try {
-                console.log("matricule",token_decoded.profil.matricule)
+                // console.log("matricule",token_decoded.profil.matricule)
                 const res = await noteService.getNoteByMatricule(token_decoded.profil.matricule);
                 if (res.data) setNotesRecentes(res.data.notes);
             } catch {
