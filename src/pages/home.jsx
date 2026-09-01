@@ -18,7 +18,7 @@ import {
   X,
 } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 //Utility: fade-in on scroll
 function useFadeIn() {
@@ -96,7 +96,7 @@ function Navbar() {
           type="button"
           className="inline-flex items-center justify-center text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg transition-all duration-200 hover:shadow-md"
         >
-          Connexion
+          <Link to="/login">Connexion</Link>
         </button>
       </div>
       </div>

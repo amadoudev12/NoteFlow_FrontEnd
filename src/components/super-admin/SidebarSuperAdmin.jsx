@@ -11,7 +11,13 @@ export default function SidebarSuperAdmin() {
     const path = pathname.replace("/dashboard/super-admin/", "");
     return path.split("/")[0] || "dashboard";
   };
-
+  const logout = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+  }
   const activeKey = getActiveKey();
 
   return (
@@ -55,7 +61,7 @@ export default function SidebarSuperAdmin() {
       </nav>
 
       <div className="p-4 border-t border-slate-100">
-        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold font-body text-slate-500 hover:bg-red-50 hover:text-red-600 transition-colors duration-200">
+        <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold font-body text-slate-500 hover:bg-red-50 hover:text-red-600 transition-colors duration-200">
           <span className="text-slate-400">Déconnexion</span>
         </button>
       </div>
