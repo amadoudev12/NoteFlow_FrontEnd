@@ -84,6 +84,16 @@ export default function CalendrierScolaire() {
     }
   };
 
+  const ActiverTrimestre = async (id) => {
+    try {
+      await trimestreService.activeTrimestre(id);
+      await load();
+      notify('Trimestre activé avec succès.', 'success');
+    } catch (err) {
+      notify(err.response?.data?.message || 'Erreur lors de l\'activation.', 'error');
+    }
+  };
+
   const activateYear = async (id) => {
     await anneeService.activate(id);
     load();
@@ -260,6 +270,14 @@ export default function CalendrierScolaire() {
                                 </span>
                                 {t.actif && (
                                   <span className="text-xs text-blue-600 font-medium">actif</span>
+                                )}
+                                {!t.actif && (
+                                  <button
+                                    onClick={() => ActiverTrimestre(t.id_trimestre)}
+                                    className="text-xs font-medium text-blue-600 hover:text-blue-700 border border-blue-200 hover:bg-blue-50 rounded-lg px-3 py-1.5 shrink-0"
+                                  >
+                                    Activer
+                                  </button>
                                 )}
                               </li>
                             ))}
