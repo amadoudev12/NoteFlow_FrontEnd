@@ -287,26 +287,25 @@ function DashboardContent({ user }) {
 // ─── App ──────────────────────────────────────────────────────────────────────
 export default function TeacherDashboard() {
   const [profil, setProfile] = useState(null)
-    const token = localStorage.getItem("token")
-    const decodedToken = jwtDecode(token)
-    const role = decodedToken?.user?.user?.role || decodedToken?.user?.role || decodedToken?.role
-    const firstLogin = decodedToken?.user?.user?.firstLogin ?? decodedToken?.user?.firstLogin ?? decodedToken?.firstLogin
-  
-    if (firstLogin && role === "ENSEIGNANT") {
-        navigate('/modification')
-        return
-    }
+  const navigate = useNavigate()
+
   useEffect(() => {
     const token = localStorage.getItem("token")
-    if (token) {
-      try {
-        const user = jwtDecode(token)
-        setProfile(user.profil)
-      } catch (err) {
-        console.log("erreur serveur")
+    if (!token) return
+    try {
+      const decodedToken = jwtDecode(token)
+      const role = decodedToken?.user?.user?.role || decodedToken?.user?.role || decodedToken?.role
+      const firstLogin = decodedToken?.user?.user?.firstLogin ?? decodedToken?.user?.firstLogin ?? decodedToken?.firstLogin
+
+      if (firstLogin && role === "ENSEIGNANT") {
+        navigate('/modification')
+        return
       }
+      setProfile(decodedToken.profil)
+    } catch (err) {
+      console.log("erreur serveur")
     }
-  }, [])
+  }, [navigate])
 
   return (
     <div className="min-h-screen bg-slate-50" style={{ fontFamily: "'Plus Jakarta Sans', 'DM Sans', sans-serif" }}>

@@ -115,7 +115,16 @@ export default function ClasseList() {
       <div className="mb-6">
         <h2 className="text-xl font-bold text-slate-800">Mes classes</h2>
         <p className="text-sm text-slate-400 mt-0.5">
-          {loading ? 'Chargement…' : `${classes?.length ?? 0} classe${(classes?.length ?? 0) > 1 ? 's' : ''} assignée${(classes?.length ?? 0) > 1 ? 's' : ''}`}
+          {loading
+            ? 'Chargement…'
+            : (() => {
+                // `classes` liste une carte par (classe, matière) : une classe
+                // enseignée dans 3 matières y apparaît 3 fois. Le nombre de
+                // classes distinctes est donc compté séparément, sinon
+                // l'en-tête affiche à tort "3 classes" pour 1 seule classe.
+                const nbClasses = new Set((classes ?? []).map((c) => c.classe?.id)).size
+                return `${nbClasses} classe${nbClasses > 1 ? 's' : ''} assignée${nbClasses > 1 ? 's' : ''}`
+              })()}
         </p>
       </div>
 

@@ -302,12 +302,17 @@ export default function ClasseStats() {
   useEffect(()=>{
     const chargerTrimestreActive = async () => {
       try {
-        const t = await trimestreService.getTrimestres()
         const restrimestreActive = await trimestreService.getTrimestresActive()
-        const trimestre_id = restrimestreActive.data.trimestreActive.id_trimestre
+        // On ne charge que les trimestres de l'année académique active :
+        // sans ce filtre, getTrimestres() ramène aussi les trimestres des
+        // années archivées (même libellé "Trimestre 1/2/3"), rendant la
+        // liste déroulante incompréhensible.
+        const anneeActiveId = restrimestreActive.data.anneeAcademique?.id
+        const t = await trimestreService.getTrimestres(anneeActiveId)
+        const trimestre_id = restrimestreActive.data.trimestreActive?.id_trimestre
         setTrimestre(t.data)
         setTrimestreSelect(trimestre_id)
-        setTrimestreActive(restrimestreActive.data.trimestreActive) //trimestreActive est la reponse ramener par le serveur 
+        setTrimestreActive(restrimestreActive.data.trimestreActive) //trimestreActive est la reponse ramener par le serveur
       }catch (err)  {
         console.log("imposible de charger le trimestre active")
       }
@@ -374,6 +379,7 @@ export default function ClasseStats() {
   }
 
   const totalEleves = stats?.total ?? 0
+  const totalNotes = repartition.reduce((s, d) => s + (d.count ?? 0), 0)
 
   return (
     <div className="p-6 ml-45 max-sm:ml-2 max-lg:ml-8 min-h-screen bg-slate-50 font-sans">
@@ -585,14 +591,18 @@ export default function ClasseStats() {
                             <tr className="text-left text-xs font-bold uppercase tracking-widest text-slate-400 border-b border-slate-100">
                                 <th className="pb-3 pr-4">Tranche</th>
                                 <th className="pb-3 pr-4">Mention</th>
-                                <th className="pb-3 pr-4 text-right">Élèves</th>
+                                <th className="pb-3 pr-4 text-right">Notes</th>
                                 <th className="pb-3 text-right">%</th>
                             </tr>
                             </thead>
                             <tbody>
                             {repartition.map((d, i) => {
-                                const pct = totalEleves
-                                ? ((d.count / totalEleves) * 100).toFixed(1)
+                                // `d.count` compte des notes individuelles (pas des élèves :
+                                // chaque élève a plusieurs notes par matière/évaluation), donc
+                                // le pourcentage doit être rapporté au total des notes, pas au
+                                // nombre d'élèves — sinon la colonne % dépasse largement 100 %.
+                                const pct = totalNotes
+                                ? ((d.count / totalNotes) * 100).toFixed(1)
                                 : "0.0";
                                 return (
                                 <tr

@@ -76,7 +76,7 @@ function Toast({ toast }) {
 
 //Confirm Delete Modal
 
-function ConfirmModal({ item, label, onCancel, onConfirm }) {
+function ConfirmModal({ item, label, nameKey, onCancel, onConfirm }) {
     return (
         <div
         className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
@@ -90,8 +90,8 @@ function ConfirmModal({ item, label, onCancel, onConfirm }) {
             <h3 className="font-bold text-slate-800 text-base mb-1">Confirmer la suppression</h3>
             <p className="text-sm text-slate-500 mb-6">
                 Voulez-vous vraiment supprimer {label.toLowerCase()}{" "}
-                <span className="font-semibold text-slate-700">&laquo; {item.nom} &raquo;</span> ?
-                Cette action entrainera aussi la suppression de l'affectation . 
+                <span className="font-semibold text-slate-700">&laquo; {item[nameKey]} &raquo;</span> ?
+                Cette action entrainera aussi la suppression de l'affectation .
             </p>
             <div className="flex gap-3">
                 <button
@@ -410,9 +410,9 @@ useEffect(() => {
     try {
       const res = await cfg.update(updated.id, { [cfg.nameKey]: updated[cfg.nameKey] });
       if (res.data) {
-        setItems((prev) => prev.map((m) => (m.id === updated.id ? { ...m, nom: updated.nom } : m)));
+        setItems((prev) => prev.map((m) => (m.id === updated.id ? { ...m, [cfg.nameKey]: updated[cfg.nameKey] } : m)));
         setEditTarget(null);
-        showToast(`${cfg.label} modifiée en « ${updated.nom} » avec succès !`, "success");
+        showToast(`${cfg.label} modifiée en « ${updated[cfg.nameKey]} » avec succès !`, "success");
       }
     } catch (err) {
       console.log('erreur serveur')
@@ -645,6 +645,7 @@ useEffect(() => {
           item={editTarget}
           allItems={items}
           label={cfg.label}
+          nameKey={cfg.nameKey}
           onClose={() => setEditTarget(null)}
           onSave={handleSaveEdit}
         />
@@ -655,6 +656,7 @@ useEffect(() => {
         <ConfirmModal
           item={deleteTarget}
           label={cfg.label}
+          nameKey={cfg.nameKey}
           onCancel={() => setDeleteTarget(null)}
           onConfirm={handleConfirmDelete}
         />
